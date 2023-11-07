@@ -1,6 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
-import { headers } from 'next/headers';
+import { unstable_noStore as noStore } from 'next/cache';
 
 export const { getClient } = registerApolloClient(() => {
   // GitHub GraphQL API Link
@@ -28,7 +28,7 @@ export const { getClient } = registerApolloClient(() => {
     localLink,
   );
 
-  headers();
+  noStore();
   return new ApolloClient({
     cache: new InMemoryCache(),
     link,
