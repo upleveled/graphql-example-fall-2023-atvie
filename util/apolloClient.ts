@@ -7,9 +7,7 @@ const applicationContext = setContext(() => {
   return {
     headers: {
       cookie: `fakeSession=${cookies().get('fakeSession')?.value}`,
-      customProperty: 'Hello world',
     },
-    cookies: 'Hello world',
   };
 });
 
