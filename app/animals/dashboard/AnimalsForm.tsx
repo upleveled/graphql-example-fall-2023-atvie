@@ -165,7 +165,7 @@ export default function AnimalsForm() {
       {data.animals.map((animal) => {
         const isEditing = onEditId === animal.id;
         return (
-          <div key={`animal-div-${animal.id}`} className="animalAdmin">
+          <div key={`animal-div-${animal.id}`}>
             {isEditing ? (
               <input
                 value={firstNameOnEditInput}
