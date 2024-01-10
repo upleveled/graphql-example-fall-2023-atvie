@@ -1,6 +1,17 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
+
+const applicationContext = setContext(() => {
+  return {
+    headers: {
+      cookie: `fakeSession=${cookies().get('fakeSession')?.value}`,
+      customProperty: 'Hello world',
+    },
+    cookies: 'Hello world',
+  };
+});
 
 export const { getClient } = registerApolloClient(() => {
   // GitHub GraphQL API Link
@@ -31,6 +42,6 @@ export const { getClient } = registerApolloClient(() => {
   headers();
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link,
+    link: applicationContext.concat(link),
   });
 });
