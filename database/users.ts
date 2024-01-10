@@ -1,7 +1,6 @@
-export async function isUserAdminBySessionToken(
+export async function getAnimalOwnerBySessionToken(
   sessionToken: string | undefined,
 ) {
   // FIXME: Implement proper authorization
-  if (sessionToken === 'macca') return await true;
-  return await false;
+  return (await sessionToken) === 'macca';
 }

@@ -13,7 +13,7 @@ import {
   getAnimals,
   updateAnimalById,
 } from '../../../database/animals';
-import { isUserAdminBySessionToken } from '../../../database/users';
+import { getAnimalOwnerBySessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphQlResponseBody =
@@ -170,7 +170,7 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     // FIXME: Implement secure authentication and Authorization
     const fakeSessionToken = req.cookies.get('fakeSession');
 
-    const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
+    const isAdmin = await getAnimalOwnerBySessionToken(fakeSessionToken?.value);
 
     return {
       req,
