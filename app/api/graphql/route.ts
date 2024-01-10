@@ -22,8 +22,8 @@ export type GraphQlResponseBody =
     }
   | Error;
 
-type FakeAdminAnimalContext = {
-  isAdmin: boolean;
+type FakeAuthenticatedAnimalOwner = {
+  isAnimalOwner: boolean;
 };
 
 type AnimalInput = {
@@ -97,9 +97,9 @@ const resolvers = {
     deleteAnimalById: async (
       parent: null,
       args: { id: string },
-      context: FakeAdminAnimalContext,
+      context: FakeAuthenticatedAnimalOwner,
     ) => {
-      if (!context.isAdmin) {
+      if (!context.isAnimalOwner) {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalById(parseInt(args.id));
@@ -170,11 +170,13 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     // FIXME: Implement secure authentication and Authorization
     const fakeSessionToken = req.cookies.get('fakeSession');
 
-    const isAdmin = await getAnimalOwnerBySessionToken(fakeSessionToken?.value);
+    const isAnimalOwner = await getAnimalOwnerBySessionToken(
+      fakeSessionToken?.value,
+    );
 
     return {
       req,
-      isAdmin,
+      isAnimalOwner,
     };
   },
 });
