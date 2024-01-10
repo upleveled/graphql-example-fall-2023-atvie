@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { getClient } from '../../../util/apolloClient';
 import AnimalsForm from './AnimalsForm';
 
-export default async function AdminPage() {
+export default async function Dashboard() {
   const fakeSessionToken = cookies().get('fakeSession');
 
   const { data } = await getClient().query({
