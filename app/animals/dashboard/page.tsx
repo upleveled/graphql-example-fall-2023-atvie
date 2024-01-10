@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getClient } from '../../../util/apolloClient';
-import AdminDashboard from './AdminDashboard';
+import AnimalsForm from './AnimalsForm';
 
 export default async function AdminPage() {
   const fakeSessionToken = cookies().get('fakeSession');
@@ -24,5 +24,5 @@ export default async function AdminPage() {
     redirect('/login');
   }
 
-  return <AdminDashboard />;
+  return <AnimalsForm />;
 }

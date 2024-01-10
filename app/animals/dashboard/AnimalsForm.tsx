@@ -59,7 +59,7 @@ const updateAnimalByIdMutation = gql`
   }
 `;
 
-export default function AdminDashboard() {
+export default function AnimalsForm() {
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      AdminDashboard
+      Dashboard
       <br />
       <label>
         First Name
