@@ -63,7 +63,7 @@ export const deleteAnimalById = cache(async (id: number) => {
   return animal;
 });
 
-export const getAnimalByFirstName = cache(async (firstName: string) => {
+export const getLoggedInAnimalByToken = cache(async (firstName: string) => {
   if (!firstName) {
     return undefined;
   }

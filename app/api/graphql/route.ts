@@ -8,9 +8,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
   deleteAnimalById,
-  getAnimalByFirstName,
   getAnimalById,
   getAnimals,
+  getLoggedInAnimalByToken,
   updateAnimalById,
 } from '../../../database/animals';
 import { getAnimalOwnerBySessionToken } from '../../../database/users';
@@ -43,7 +43,7 @@ const typeDefs = gql`
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInAnimalByFirstName(firstName: String!): Animal
+    loggedInAnimal: Animal
   }
 
   type Mutation {
@@ -72,11 +72,18 @@ const resolvers = {
       return await getAnimalById(parseInt(args.id));
     },
 
-    loggedInAnimalByFirstName: async (
+    loggedInAnimal: async (
       parent: null,
-      args: { firstName: string },
+      args: null,
+      contextValue: {
+        fakeSessionToken: {
+          value: string;
+        };
+      },
     ) => {
-      return await getAnimalByFirstName(args.firstName);
+      return await getLoggedInAnimalByToken(
+        contextValue.fakeSessionToken.value,
+      );
     },
   },
 
@@ -126,10 +133,7 @@ const resolvers = {
       );
     },
 
-    login: async (
-      parent: null,
-      args: { username: string; password: string },
-    ) => {
+    login: (parent: null, args: { username: string; password: string }) => {
       //  FIXME: Implement secure authentication
       if (
         typeof args.username !== 'string' ||
@@ -150,8 +154,6 @@ const resolvers = {
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
-
-      return await getAnimalByFirstName(args.username);
     },
   },
 };
@@ -177,6 +179,7 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     return {
       req,
       isAnimalOwner,
+      fakeSessionToken,
     };
   },
 });
