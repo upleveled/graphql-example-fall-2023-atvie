@@ -98,15 +98,16 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field is missing');
       }
+
       return await createAnimal(args.firstName, args.type, args.accessory);
     },
 
     deleteAnimalById: async (
       parent: null,
       args: { id: string },
-      context: FakeAuthenticatedAnimalOwner,
+      contextValue: FakeAuthenticatedAnimalOwner,
     ) => {
-      if (!context.isAnimalOwner) {
+      if (!contextValue.isAnimalOwner) {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalById(parseInt(args.id));
