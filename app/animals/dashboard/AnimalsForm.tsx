@@ -122,7 +122,7 @@ export default function AnimalsForm() {
 
   return (
     <div>
-      Dashboard
+      Animals Dashboard
       <br />
       <label>
         First Name
