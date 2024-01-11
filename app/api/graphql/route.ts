@@ -43,7 +43,7 @@ const typeDefs = gql`
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInAnimalByFirstName(firstName: String!): Animal
+    loggedInAnimal: Animal
   }
 
   type Mutation {
@@ -72,11 +72,16 @@ const resolvers = {
       return await getAnimalById(parseInt(args.id));
     },
 
-    loggedInAnimalByFirstName: async (
+    loggedInAnimal: async (
       parent: null,
-      args: { firstName: string },
+      args: null,
+      contextValue: {
+        fakeSessionToken: {
+          value: string;
+        };
+      },
     ) => {
-      return await getAnimalByFirstName(args.firstName);
+      return await getAnimalByFirstName(contextValue.fakeSessionToken.value);
     },
   },
 
@@ -177,6 +182,7 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     return {
       req,
       isAnimalOwner,
+      fakeSessionToken,
     };
   },
 });
