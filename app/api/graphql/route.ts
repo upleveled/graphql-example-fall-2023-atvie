@@ -8,12 +8,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
   deleteAnimalById,
-  getAnimalByFirstName,
   getAnimalById,
   getAnimals,
   updateAnimalById,
 } from '../../../database/animals';
-import { isUserAdminBySessionToken } from '../../../database/users';
+import {
+  getUserByFirstName,
+  isUserAdminBySessionToken,
+} from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphQlResponseBody =
@@ -40,10 +42,16 @@ const typeDefs = gql`
     accessory: String
   }
 
+  type User {
+    id: ID!
+    firstName: String!
+    age: Int
+  }
+
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInAnimalByFirstName(firstName: String!): Animal
+    loggedInUser(firstName: String!): User
   }
 
   type Mutation {
@@ -58,7 +66,7 @@ const typeDefs = gql`
       accessory: String
     ): Animal
 
-    login(username: String!, password: String!): Animal
+    login(username: String!, password: String!): User
   }
 `;
 
@@ -72,11 +80,8 @@ const resolvers = {
       return await getAnimalById(parseInt(args.id));
     },
 
-    loggedInAnimalByFirstName: async (
-      parent: null,
-      args: { firstName: string },
-    ) => {
-      return await getAnimalByFirstName(args.firstName);
+    loggedInUser: async (parent: null, args: { firstName: string }) => {
+      return await getUserByFirstName(args.firstName);
     },
   },
 
@@ -140,7 +145,7 @@ const resolvers = {
         throw new GraphQLError('Required field missing');
       }
 
-      if (args.username !== 'lucia' || args.password !== 'asdf') {
+      if (args.username !== 'Victor' || args.password !== 'asdf') {
         throw new GraphQLError('Invalid username or password');
       }
 
@@ -151,7 +156,7 @@ const resolvers = {
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
 
-      return await getAnimalByFirstName(args.username);
+      return await getUserByFirstName(args.username);
     },
   },
 };

@@ -23,12 +23,11 @@ export default async function RootLayout({
   const fakeSessionToken = cookies().get('fakeSession');
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInAnimal($firstName: String!) {
-        loggedInAnimalByFirstName(firstName: $firstName) {
+      query LoggedInUser($firstName: String!) {
+        loggedInUser(firstName: $firstName) {
           id
           firstName
-          type
-          accessory
+          age
         }
       }
     `,
@@ -60,8 +59,8 @@ export default async function RootLayout({
             <Link href="/animals/admin">Animal admin</Link>
           </div>
 
-          <span>{data.loggedInAnimalByFirstName?.firstName}</span>
-          {data.loggedInAnimalByFirstName?.firstName ? (
+          <span>{data.loggedInUser?.firstName}</span>
+          {data.loggedInUser?.firstName ? (
             <LogoutButton />
           ) : (
             <Link href="/login">Login</Link>

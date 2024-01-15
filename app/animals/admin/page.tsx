@@ -9,8 +9,8 @@ export default async function AdminPage() {
 
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInAnimal($firstName: String!) {
-        loggedInAnimalByFirstName(firstName: $firstName) {
+      query LoggedInUser($firstName: String!) {
+        loggedInUser(firstName: $firstName) {
           firstName
         }
       }
@@ -20,7 +20,7 @@ export default async function AdminPage() {
     },
   });
 
-  if (!data.loggedInAnimalByFirstName) {
+  if (!data.loggedInUser) {
     redirect('/login');
   }
 
