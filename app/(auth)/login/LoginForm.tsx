@@ -8,8 +8,7 @@ const loginMutation = gql`
     login(username: $username, password: $password) {
       id
       firstName
-      type
-      accessory
+      age
     }
   }
 `;
