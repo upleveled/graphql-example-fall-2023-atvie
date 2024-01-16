@@ -17,7 +17,5 @@ export async function up(sql: Sql) {
 }
 
 export async function down(sql: Sql) {
-  await sql`
-    DROP TABLE users
-  `;
+  await sql` DROP TABLE users `;
 }

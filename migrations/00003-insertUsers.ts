@@ -8,18 +8,23 @@ const users = [
 export async function up(sql: Sql) {
   for (const user of users) {
     await sql`
-      INSERT INTO users
-        (first_name, age)
+      INSERT INTO
+        users (first_name, age)
       VALUES
-        (${user.firstName}, ${user.age})
-  `;
+        (
+          ${user.firstName},
+          ${user.age}
+        )
+    `;
   }
 }
 
 export async function down(sql: Sql) {
   for (const user of users) {
     await sql`
-      DELETE FROM users WHERE id = ${user.id}
+      DELETE FROM users
+      WHERE
+        id = ${user.id}
     `;
   }
 }

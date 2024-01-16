@@ -8,12 +8,12 @@ export const getUserByFirstName = cache(async (firstName: string) => {
   }
 
   const [user] = await sql<Users[]>`
-      SELECT
-        *
-      FROM
-        users
-      WHERE
-        first_name = ${firstName}
+    SELECT
+      *
+    FROM
+      users
+    WHERE
+      first_name = ${firstName}
   `;
   return user;
 });
