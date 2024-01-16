@@ -2,7 +2,15 @@
 import { gql, useMutation } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
-import { AnimalResponse } from '../page';
+
+export type AnimalResponse = {
+  animals: {
+    id: number;
+    firstName: string;
+    type: string;
+    accessory: string;
+  }[];
+};
 
 const createAnimal = gql`
   mutation CreateAnimal(
