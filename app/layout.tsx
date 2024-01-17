@@ -23,16 +23,15 @@ export default async function RootLayout({
   const fakeSessionToken = cookies().get('fakeSession');
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInUser($firstName: String!) {
-        loggedInUser(firstName: $firstName) {
+      query LoggedInUser($username: String!) {
+        loggedInUser(username: $username) {
           id
-          firstName
-          age
+          username
         }
       }
     `,
     variables: {
-      firstName: fakeSessionToken?.value || '',
+      username: fakeSessionToken?.value || '',
     },
   });
 

@@ -9,14 +9,14 @@ export default async function AdminPage() {
 
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInUser($firstName: String!) {
-        loggedInUser(firstName: $firstName) {
-          firstName
+      query LoggedInUser($username: String!) {
+        loggedInUser(username: $username) {
+          username
         }
       }
     `,
     variables: {
-      firstName: fakeSessionToken?.value || '',
+      username: fakeSessionToken?.value || '',
     },
   });
 
