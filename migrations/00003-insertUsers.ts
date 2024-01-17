@@ -1,19 +1,18 @@
 import { Sql } from 'postgres';
 
 const users = [
-  { id: 1, firstName: 'Victor', age: 17 },
-  { id: 2, firstName: 'Lukas', age: 13 },
+  { id: 1, username: 'victor' },
+  { id: 2, username: 'lukas' },
 ];
 
 export async function up(sql: Sql) {
   for (const user of users) {
     await sql`
       INSERT INTO
-        users (first_name, age)
+        users (username)
       VALUES
         (
-          ${user.firstName},
-          ${user.age}
+          ${user.username}
         )
     `;
   }
