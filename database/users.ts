@@ -3,10 +3,6 @@ import { Users } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
 export const getUserByUsername = cache(async (username: string) => {
-  if (!username) {
-    return undefined;
-  }
-
   const [user] = await sql<Users[]>`
     SELECT
       *
