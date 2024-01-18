@@ -55,7 +55,7 @@ export default async function RootLayout({
           >
             <Link href="/">Home</Link>
             <Link href="/animals">Animals</Link>
-            <Link href="/animals/admin">Animal admin</Link>
+            <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
           <span>{data.loggedInUser?.firstName}</span>

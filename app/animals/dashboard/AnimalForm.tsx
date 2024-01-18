@@ -67,7 +67,7 @@ const updateAnimalByIdMutation = gql`
   }
 `;
 
-export default function AdminDashboard() {
+export default function AnimalForm() {
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
 
   return (
     <div>
-      AdminDashboard
+      Animal Dashboard
       <br />
       <label>
         First Name
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
       {data.animals.map((animal) => {
         const isEditing = onEditId === animal.id;
         return (
-          <div key={`animal-div-${animal.id}`} className="animalAdmin">
+          <div key={`animal-div-${animal.id}`}>
             {isEditing ? (
               <input
                 value={firstNameOnEditInput}
