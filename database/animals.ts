@@ -8,7 +8,7 @@ export const getAnimals = cache(async () => {
       *
     FROM
       animals
- `;
+  `;
   return animals;
 });
 
@@ -53,8 +53,8 @@ export const updateAnimalById = cache(
         accessory = ${accessory}
       WHERE
         id = ${id}
-        RETURNING
-          *
+      RETURNING
+        *
     `;
 
     return animal;
