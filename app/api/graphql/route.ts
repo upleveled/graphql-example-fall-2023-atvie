@@ -154,7 +154,7 @@ const resolvers = {
       // 3. Set the cookie with the response from the database (the token)
 
       // Currently setting a cookie with the username as the session token
-      cookies().set('fakeSession', args.username, {
+      cookies().set('insecureSession', 'this-cookie-is-insecure', {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
@@ -176,7 +176,7 @@ const apolloServer = new ApolloServer({
 const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
     // FIXME: Implement secure authentication and Authorization
-    const insecureSessionTokenCookie = req.cookies.get('fakeSession');
+    const insecureSessionTokenCookie = req.cookies.get('insecureSession');
 
     const isAdmin = await isUserAdminBySessionToken(
       insecureSessionTokenCookie?.value,
