@@ -5,18 +5,18 @@ import { getClient } from '../../../util/apolloClient';
 import AnimalForm from './AnimalForm';
 
 export default async function DashboardPage() {
-  const fakeSessionTokenCookie = cookies().get('fakeSession');
+  const insecureSessionTokenCookie = cookies().get('fakeSession');
 
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInUser($fakeSessionToken: String!) {
-        loggedInUser(fakeSessionToken: $fakeSessionToken) {
+      query LoggedInUser($insecureSessionToken: String!) {
+        loggedInUser(insecureSessionToken: $insecureSessionToken) {
           username
         }
       }
     `,
     variables: {
-      fakeSessionToken: fakeSessionTokenCookie?.value || '',
+      insecureSessionToken: insecureSessionTokenCookie?.value || '',
     },
   });
 

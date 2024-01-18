@@ -2,15 +2,15 @@ import { cache } from 'react';
 import { Users } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
-export const getUserByFakeSessionToken = cache(
-  async (fakeSessionToken: string) => {
+export const getUserByInsecureSessionToken = cache(
+  async (insecureSessionToken: string) => {
     const [user] = await sql<Users[]>`
       SELECT
         *
       FROM
         users
       WHERE
-        username = ${fakeSessionToken}
+        username = ${insecureSessionToken}
         -- FIXME: Implement proper token validation with INNER JOIN on sessions table
     `;
     return user;
