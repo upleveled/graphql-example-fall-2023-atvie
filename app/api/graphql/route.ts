@@ -148,6 +148,12 @@ const resolvers = {
         throw new GraphQLError('Invalid username or password');
       }
 
+      // FIXME: Generate and set a secure session token following the steps below
+      // 1. Generate a token
+      // 2. Store the token in the database
+      // 3. Set the cookie with the response from the database (the token)
+
+      // Currently setting a cookie with the username as the session token
       cookies().set('fakeSession', args.username, {
         httpOnly: true,
         sameSite: 'lax',
