@@ -20,18 +20,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const fakeSessionToken = cookies().get('fakeSession');
+  const fakeSessionTokenCookie = cookies().get('fakeSession');
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInUser($username: String!) {
-        loggedInUser(username: $username) {
+      query LoggedInUser($fakeSessionToken: String!) {
+        loggedInUser(fakeSessionToken: $fakeSessionToken) {
           id
           username
         }
       }
     `,
     variables: {
-      username: fakeSessionToken?.value || '',
+      fakeSessionToken: fakeSessionTokenCookie?.value || '',
     },
   });
 

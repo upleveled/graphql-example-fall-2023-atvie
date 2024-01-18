@@ -3,9 +3,9 @@
 import { cookies } from 'next/headers';
 
 export async function logout() {
-  const fakeSessionToken = cookies().get('fakeSession');
+  const fakeSessionTokenCookie = cookies().get('fakeSession');
 
-  if (!fakeSessionToken) return undefined;
+  if (!fakeSessionTokenCookie) return undefined;
   // FIXME: Delete the session from the database
 
   // set the cookie to be expired

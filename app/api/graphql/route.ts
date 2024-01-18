@@ -13,7 +13,7 @@ import {
   updateAnimalById,
 } from '../../../database/animals';
 import {
-  getUserByUsername,
+  getUserByFakeSessionToken,
   isUserAdminBySessionToken,
 } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
@@ -50,7 +50,7 @@ const typeDefs = gql`
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInUser(username: String!): User
+    loggedInUser(fakeSessionToken: String!): User
   }
 
   type Mutation {
@@ -79,8 +79,8 @@ const resolvers = {
       return await getAnimalById(parseInt(args.id));
     },
 
-    loggedInUser: async (parent: null, args: { username: string }) => {
-      return await getUserByUsername(args.username);
+    loggedInUser: async (parent: null, args: { fakeSessionToken: string }) => {
+      return await getUserByFakeSessionToken(args.fakeSessionToken);
     },
   },
 
@@ -178,9 +178,11 @@ const apolloServer = new ApolloServer({
 const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
     // FIXME: Implement secure authentication and Authorization
-    const fakeSessionToken = req.cookies.get('fakeSession');
+    const fakeSessionTokenCookie = req.cookies.get('fakeSession');
 
-    const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
+    const isAdmin = await isUserAdminBySessionToken(
+      fakeSessionTokenCookie?.value,
+    );
 
     return {
       req,
