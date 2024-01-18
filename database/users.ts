@@ -10,9 +10,10 @@ export const getUserByInsecureSessionToken = cache(
       FROM
         users
       WHERE
-        username = ${insecureSessionToken}
         -- FIXME: Implement proper token validation with INNER JOIN on sessions table
+        username = 'victor'
     `;
+    console.log(insecureSessionToken);
     return user;
   },
 );
