@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getClient } from '../../util/apolloClient';
-import { AnimalResponse } from './admin/AdminDashboard';
+import { AnimalResponse } from './dashboard/AnimalForm';
 
 export default async function AnimalsPage() {
   const { data } = await getClient().query<AnimalResponse>({
