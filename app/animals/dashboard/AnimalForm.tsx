@@ -111,7 +111,6 @@ export default function AnimalForm() {
 
     onError: (error) => {
       setOnError(error.message);
-      return;
     },
 
     onCompleted: async () => {
