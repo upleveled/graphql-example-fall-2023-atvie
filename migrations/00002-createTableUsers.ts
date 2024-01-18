@@ -10,7 +10,7 @@ export async function up(sql: Sql) {
     CREATE TABLE users (
       id integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
       username varchar(30) NOT NULL
-    );
+    )
   `;
 }
 
