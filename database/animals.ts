@@ -4,7 +4,10 @@ import { sql } from './connect';
 
 export const getAnimals = cache(async () => {
   const animals = await sql<Animal[]>`
-    SELECT * FROM animals
+    SELECT
+      *
+    FROM
+      animals
  `;
   return animals;
 });
@@ -24,11 +27,16 @@ export const getAnimalById = cache(async (id: number) => {
 export const createAnimal = cache(
   async (firstName: string, type: string, accessory: string) => {
     const [animal] = await sql<Animal[]>`
-      INSERT INTO animals
-        (first_name, type, accessory)
+      INSERT INTO
+        animals (first_name, type, accessory)
       VALUES
-        (${firstName}, ${type}, ${accessory})
-      RETURNING *
+        (
+          ${firstName},
+          ${type},
+          ${accessory}
+        )
+      RETURNING
+        *
     `;
 
     return animal;
@@ -45,7 +53,8 @@ export const updateAnimalById = cache(
         accessory = ${accessory}
       WHERE
         id = ${id}
-        RETURNING *
+        RETURNING
+          *
     `;
 
     return animal;
@@ -54,11 +63,11 @@ export const updateAnimalById = cache(
 
 export const deleteAnimalById = cache(async (id: number) => {
   const [animal] = await sql<Animal[]>`
-    DELETE FROM
-      animals
+    DELETE FROM animals
     WHERE
       id = ${id}
-    RETURNING *
+    RETURNING
+      *
   `;
   return animal;
 });
