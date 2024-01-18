@@ -4,10 +4,6 @@ import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
-export type GetAnimalsResponse = {
-  animals: Animal[];
-};
-
 const createAnimal = gql`
   mutation CreateAnimal(
     $firstName: String!
@@ -73,7 +69,7 @@ export default function AnimalForm() {
   const [accessoryOnEditInput, setAccessoryOnEditInput] = useState('');
   const [onEditId, setOnEditId] = useState<number | undefined>();
 
-  const { data, refetch } = useSuspenseQuery<GetAnimalsResponse>(getAnimals);
+  const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(getAnimals);
 
   const [createAnimalHandler] = useMutation(createAnimal, {
     variables: {
