@@ -130,10 +130,7 @@ const resolvers = {
       );
     },
 
-    login: async (
-      parent: null,
-      args: { username: string; password: string },
-    ) => {
+    login: (parent: null, args: { username: string; password: string }) => {
       //  FIXME: Implement secure authentication
       if (
         typeof args.username !== 'string' ||
@@ -160,8 +157,6 @@ const resolvers = {
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
-
-      return await getUserByUsername(args.username);
     },
   },
 };
