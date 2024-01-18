@@ -1,16 +1,19 @@
 import { gql } from '@apollo/client';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Animal } from '../../migrations/00000-createTableAnimals';
 import { getClient } from '../../util/apolloClient';
-import { AnimalResponse } from './dashboard/AnimalForm';
 
 export default async function AnimalsPage() {
-  const { data } = await getClient().query<AnimalResponse>({
+  const { data } = await getClient().query<{
+    animals: Pick<Animal, 'id' | 'firstName' | 'type'>[];
+  }>({
     query: gql`
       query GetAnimals {
         animals {
           id
           firstName
+          type
         }
       }
     `,
