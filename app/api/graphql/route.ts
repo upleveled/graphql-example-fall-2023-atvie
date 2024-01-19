@@ -178,10 +178,11 @@ const apolloServer = new ApolloServer({
 const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
     // FIXME: Implement secure authentication and Authorization
-    const insecureSessionToken = await req.cookies.get('sessionToken');
+    // // FIXME: Make secure session token and rename insecureSessionTokenCookie to sessionToken
+    const insecureSessionTokenCookie = await req.cookies.get('sessionToken');
 
     return {
-      insecureSessionToken,
+      insecureSessionTokenCookie,
     };
   },
 });

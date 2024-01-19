@@ -19,11 +19,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const insecureSessionToken = cookies().get('sessionToken');
+  // FIXME: Make secure session token and rename insecureSessionTokenCookie to sessionToken
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
 
   const user =
-    insecureSessionToken &&
-    (await getUserByInsecureSessionToken(insecureSessionToken.value));
+    insecureSessionTokenCookie &&
+    (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
 
   return (
     <html lang="en">
