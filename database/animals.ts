@@ -43,24 +43,6 @@ export const createAnimal = cache(
   },
 );
 
-export const updateAnimalById = cache(
-  async (id: number, firstName: string, type: string, accessory: string) => {
-    const [animal] = await sql<Animal[]>`
-      UPDATE animals
-      SET
-        first_name = ${firstName},
-        type = ${type},
-        accessory = ${accessory}
-      WHERE
-        id = ${id}
-      RETURNING
-        *
-    `;
-
-    return animal;
-  },
-);
-
 export const deleteAnimalByInsecureSessionToken = cache(
   async (animalId: number, insecureSessionToken: string) => {
     // FIXME: Remove this early return when proper token validation is implemented
