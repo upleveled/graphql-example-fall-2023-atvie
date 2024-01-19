@@ -72,7 +72,7 @@ const resolvers = {
     },
 
     animal: async (parent: null, args: { id: string }) => {
-      return await getAnimalById(parseInt(args.id));
+      return await getAnimalById(Number(args.id));
     },
   },
 
@@ -99,7 +99,7 @@ const resolvers = {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalByInsecureSessionToken(
-        parseInt(args.id),
+        Number(args.id),
         context.insecureSessionToken.value,
       );
     },
@@ -123,7 +123,7 @@ const resolvers = {
         throw new GraphQLError('Required field missing');
       }
       return await updateAnimalByInsecureSessionToken(
-        parseInt(args.id),
+        Number(args.id),
         args.firstName,
         args.type,
         args.accessory,
