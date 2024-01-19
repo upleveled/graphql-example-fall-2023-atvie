@@ -38,14 +38,14 @@ const getAnimals = gql`
   }
 `;
 
-const updateAnimalByIdMutation = gql`
+const updateAnimalMutation = gql`
   mutation UpdateAnimal(
     $id: ID!
     $firstNameOnEditInput: String!
     $typeOnEditInput: String!
     $accessoryOnEditInput: String
   ) {
-    updateAnimalById(
+    updateAnimal(
       id: $id
       firstName: $firstNameOnEditInput
       type: $typeOnEditInput
@@ -101,7 +101,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [handleUpdateAnimal] = useMutation(updateAnimalByIdMutation, {
+  const [handleUpdateAnimal] = useMutation(updateAnimalMutation, {
     variables: {
       id: onEditId,
       firstNameOnEditInput,
