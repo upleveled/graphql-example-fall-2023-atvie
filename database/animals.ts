@@ -78,7 +78,7 @@ export const updateAnimalByInsecureSessionToken = cache(
 
 export const deleteAnimalByInsecureSessionToken = cache(
   async (animalId: number, insecureSessionToken: string) => {
-    // FIXME: Remove this early return when proper token validation is implemented
+    // FIXME: Remove this early return when proper token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
