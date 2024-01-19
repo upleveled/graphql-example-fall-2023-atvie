@@ -35,10 +35,10 @@
     "@types/react-dom": "latest",
     "eslint-config-upleveled": "^7.5.0",
     "libpg-query": "^15.0.2",
-    "prettier-plugin-embed": "^0.4.4",
+    "prettier-plugin-embed": "^0.4.7",
     "prettier-plugin-sql": "^0.18.0",
-    "stylelint": "^15.11.0",
-    "stylelint-config-upleveled": "^1.0.7",
+    "stylelint": "^15.10.3",
+    "stylelint-config-upleveled": "^1.0.2",
     "typescript": "latest"
   }
 }
