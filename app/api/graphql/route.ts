@@ -7,13 +7,12 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
-  deleteAnimalById,
+  deleteAnimalByInsecureSessionToken,
   getAnimalById,
   getAnimals,
-  updateAnimalById,
+  updateAnimalByInsecureSessionToken,
 } from '../../../database/animals';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
-import { User } from '../../../migrations/00002-createTableUsers';
 
 export type GraphQlResponseBody =
   | {
@@ -21,8 +20,8 @@ export type GraphQlResponseBody =
     }
   | Error;
 
-type LoggedInUser = {
-  user: User;
+type GraphQLContext = {
+  req: NextRequest;
 };
 
 type AnimalInput = {
@@ -52,9 +51,9 @@ const typeDefs = gql`
   type Mutation {
     createAnimal(firstName: String!, type: String!, accessory: String): Animal
 
-    deleteAnimalById(id: ID!): Animal
+    deleteAnimal(id: ID!): Animal
 
-    updateAnimalById(
+    updateAnimal(
       id: ID!
       firstName: String!
       type: String!
@@ -90,23 +89,32 @@ const resolvers = {
       return await createAnimal(args.firstName, args.type, args.accessory);
     },
 
-    deleteAnimalById: async (
+    deleteAnimal: async (
       parent: null,
       args: { id: string },
-      context: LoggedInUser,
+      context: GraphQLContext,
     ) => {
-      if (context.user.username !== 'victor') {
+      const insecureSessionTokenCookie =
+        context.req.cookies.get('sessionToken');
+
+      if (!insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimalById(parseInt(args.id));
+      return await deleteAnimalByInsecureSessionToken(
+        parseInt(args.id),
+        insecureSessionTokenCookie.value,
+      );
     },
 
-    updateAnimalById: async (
+    updateAnimal: async (
       parent: null,
       args: AnimalInput & { id: string },
-      context: LoggedInUser,
+      context: GraphQLContext,
     ) => {
-      if (!context.user.username) {
+      const insecureSessionTokenCookie =
+        context.req.cookies.get('sessionToken');
+
+      if (!insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
 
@@ -119,11 +127,12 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimalById(
+      return await updateAnimalByInsecureSessionToken(
         parseInt(args.id),
         args.firstName,
         args.type,
         args.accessory,
+        insecureSessionTokenCookie.value,
       );
     },
 
