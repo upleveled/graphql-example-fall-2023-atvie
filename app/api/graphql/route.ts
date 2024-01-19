@@ -22,7 +22,7 @@ export type GraphQlResponseBody =
   | Error;
 
 type GraphQLContext = {
-  insecureSessionToken: RequestCookie | undefined;
+  insecureSessionTokenCookie: RequestCookie | undefined;
 };
 
 type AnimalInput = {
@@ -95,12 +95,12 @@ const resolvers = {
       args: { id: string },
       context: GraphQLContext,
     ) => {
-      if (!context.insecureSessionToken) {
+      if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalByInsecureSessionToken(
         Number(args.id),
-        context.insecureSessionToken.value,
+        context.insecureSessionTokenCookie.value,
       );
     },
 
@@ -109,7 +109,7 @@ const resolvers = {
       args: AnimalInput & { id: string },
       context: GraphQLContext,
     ) => {
-      if (!context.insecureSessionToken) {
+      if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
 
@@ -127,7 +127,7 @@ const resolvers = {
         args.firstName,
         args.type,
         args.accessory,
-        context.insecureSessionToken.value,
+        context.insecureSessionTokenCookie.value,
       );
     },
 
