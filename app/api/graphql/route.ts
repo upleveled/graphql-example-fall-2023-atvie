@@ -12,7 +12,6 @@ import {
   getAnimals,
   updateAnimalById,
 } from '../../../database/animals';
-import { getUserByInsecureSessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 import { User } from '../../../migrations/00002-createTableUsers';
 
@@ -175,14 +174,8 @@ const apolloServer = new ApolloServer({
 const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
     // FIXME: Implement secure authentication and Authorization
-    const insecureSessionTokenCookie = req.cookies.get('sessionToken');
-    const user =
-      insecureSessionTokenCookie &&
-      (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
-
     return {
       req,
-      user,
     };
   },
 });
