@@ -12,11 +12,9 @@ import {
   getAnimals,
   updateAnimalById,
 } from '../../../database/animals';
-import {
-  getUserByInsecureSessionToken,
-  isUserAdminBySessionToken,
-} from '../../../database/users';
+import { getUserByInsecureSessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
+import { User } from '../../../migrations/00002-createTableUsers';
 
 export type GraphQlResponseBody =
   | {
@@ -24,8 +22,8 @@ export type GraphQlResponseBody =
     }
   | Error;
 
-type FakeAdminAnimalContext = {
-  isAdmin: boolean;
+type LoggedInUser = {
+  user: User;
 };
 
 type AnimalInput = {
@@ -96,9 +94,9 @@ const resolvers = {
     deleteAnimalById: async (
       parent: null,
       args: { id: string },
-      context: FakeAdminAnimalContext,
+      context: LoggedInUser,
     ) => {
-      if (!context.isAdmin) {
+      if (context.user.username !== 'victor') {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalById(parseInt(args.id));
@@ -107,7 +105,12 @@ const resolvers = {
     updateAnimalById: async (
       parent: null,
       args: AnimalInput & { id: string },
+      context: LoggedInUser,
     ) => {
+      if (!context.user.username) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
       if (
         typeof args.firstName !== 'string' ||
         typeof args.type !== 'string' ||
@@ -173,14 +176,13 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
     // FIXME: Implement secure authentication and Authorization
     const insecureSessionTokenCookie = req.cookies.get('sessionToken');
-
-    const isAdmin = await isUserAdminBySessionToken(
-      insecureSessionTokenCookie?.value,
-    );
+    const user =
+      insecureSessionTokenCookie &&
+      (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
 
     return {
       req,
-      isAdmin,
+      user,
     };
   },
 });
