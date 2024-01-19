@@ -60,3 +60,25 @@ export const updateAnimalById = cache(
     return animal;
   },
 );
+
+export const deleteAnimalByInsecureSessionToken = cache(
+  async (animalId: number, insecureSessionToken: string) => {
+    // FIXME: Remove this early return when proper token validation is implemented
+    if (
+      insecureSessionToken !==
+      'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
+    ) {
+      return undefined;
+    }
+
+    const [animal] = await sql<Animal[]>`
+      DELETE FROM animals
+      -- FIXME: Implement proper token validation with INNER JOIN on sessions table
+      WHERE
+        id = ${animalId}
+      RETURNING
+        *
+    `;
+    return animal;
+  },
+);
