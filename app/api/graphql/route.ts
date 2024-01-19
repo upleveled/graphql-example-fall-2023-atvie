@@ -50,7 +50,6 @@ const typeDefs = gql`
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInUser(insecureSessionToken: String!): User
   }
 
   type Mutation {
@@ -77,13 +76,6 @@ const resolvers = {
 
     animal: async (parent: null, args: { id: string }) => {
       return await getAnimalById(parseInt(args.id));
-    },
-
-    loggedInUser: async (
-      parent: null,
-      args: { insecureSessionToken: string },
-    ) => {
-      return await getUserByInsecureSessionToken(args.insecureSessionToken);
     },
   },
 
