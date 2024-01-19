@@ -154,12 +154,16 @@ const resolvers = {
       // 3. Set the cookie with the response from the database (the token)
 
       // Currently setting a cookie with the username as the session token
-      cookies().set('insecureSession', 'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f', {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-      });
+      cookies().set(
+        'sessionToken',
+        'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f',
+        {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+        },
+      );
     },
   },
 };
