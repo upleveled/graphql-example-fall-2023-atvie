@@ -60,14 +60,3 @@ export const updateAnimalById = cache(
     return animal;
   },
 );
-
-export const deleteAnimalById = cache(async (id: number) => {
-  const [animal] = await sql<Animal[]>`
-    DELETE FROM animals
-    WHERE
-      id = ${id}
-    RETURNING
-      *
-  `;
-  return animal;
-});
