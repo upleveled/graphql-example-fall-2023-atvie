@@ -1,26 +1,16 @@
-import { gql } from '@apollo/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getClient } from '../../../util/apolloClient';
+import { getUserByInsecureSessionToken } from '../../../database/users';
 import AnimalForm from './AnimalForm';
 
 export default async function DashboardPage() {
   const insecureSessionTokenCookie = cookies().get('sessionToken');
 
-  const { data } = await getClient().query({
-    query: gql`
-      query LoggedInUser($insecureSessionToken: String!) {
-        loggedInUser(insecureSessionToken: $insecureSessionToken) {
-          username
-        }
-      }
-    `,
-    variables: {
-      insecureSessionToken: insecureSessionTokenCookie?.value || '',
-    },
-  });
+  const user =
+    insecureSessionTokenCookie &&
+    (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
 
-  if (!data.loggedInUser) {
+  if (!user) {
     redirect('/login');
   }
 

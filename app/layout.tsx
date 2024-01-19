@@ -1,10 +1,9 @@
 import './globals.css';
-import { gql } from '@apollo/client';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { getClient } from '../util/apolloClient';
+import { getUserByInsecureSessionToken } from '../database/users';
 import { LogoutButton } from './(auth)/logout/LogoutButton';
 import { ApolloClientProvider } from './ApolloClientProvider';
 
@@ -21,19 +20,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const insecureSessionToken = cookies().get('sessionToken');
-  const { data } = await getClient().query({
-    query: gql`
-      query LoggedInUser($insecureSessionToken: String!) {
-        loggedInUser(insecureSessionToken: $insecureSessionToken) {
-          id
-          username
-        }
-      }
-    `,
-    variables: {
-      insecureSessionToken: insecureSessionToken?.value || '',
-    },
-  });
+
+  const user =
+    insecureSessionToken &&
+    (await getUserByInsecureSessionToken(insecureSessionToken.value));
 
   return (
     <html lang="en">
@@ -58,12 +48,8 @@ export default async function RootLayout({
             <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
-          <span>{data.loggedInUser?.username}</span>
-          {data.loggedInUser?.username ? (
-            <LogoutButton />
-          ) : (
-            <Link href="/login">Login</Link>
-          )}
+          <span>{user?.username}</span>
+          {user?.username ? <LogoutButton /> : <Link href="/login">Login</Link>}
         </nav>
         <ApolloClientProvider>{children}</ApolloClientProvider>
       </body>
