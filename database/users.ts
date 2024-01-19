@@ -4,6 +4,14 @@ import { sql } from './connect';
 
 export const getUserByInsecureSessionToken = cache(
   async (insecureSessionToken: string) => {
+    // FIXME: Remove this early return when proper token validation is implemented
+    if (
+      insecureSessionToken !==
+      'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
+    ) {
+      return undefined;
+    }
+
     const [user] = await sql<Users[]>`
       SELECT
         *
