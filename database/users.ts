@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import { Users } from '../migrations/00002-createTableUsers';
+import { User } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
 export const getUserByInsecureSessionToken = cache(
@@ -12,7 +12,7 @@ export const getUserByInsecureSessionToken = cache(
       return undefined;
     }
 
-    const [user] = await sql<Users[]>`
+    const [user] = await sql<User[]>`
       SELECT
         *
       FROM
