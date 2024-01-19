@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers';
 
 export async function logout() {
-  // FIXME: Make secure session token and rename insecureSessionTokenCookie to sessionToken
+  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
   const insecureSessionTokenCookie = cookies().get('sessionToken');
 
   if (!insecureSessionTokenCookie) return undefined;
