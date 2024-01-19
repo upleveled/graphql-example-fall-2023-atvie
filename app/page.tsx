@@ -15,7 +15,7 @@ export default function HomePage() {
         width={400}
         height={300}
       />
-      {/* <Image src={smilingCat} alt="Smiling cat" /> */}
+      <Image src={smilingCat} alt="Smiling cat" />
     </main>
   );
 }
