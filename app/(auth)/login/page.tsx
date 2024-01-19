@@ -4,7 +4,7 @@ import React from 'react';
 import LoginForm from './LoginForm';
 
 export default function LoginPage() {
-  const insecureSessionTokenCookie = cookies().get('insecureSession');
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
 
   if (insecureSessionTokenCookie?.value) {
     redirect('/animals');

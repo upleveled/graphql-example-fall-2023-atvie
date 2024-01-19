@@ -5,7 +5,7 @@ import { getClient } from '../../../util/apolloClient';
 import AnimalForm from './AnimalForm';
 
 export default async function DashboardPage() {
-  const insecureSessionTokenCookie = cookies().get('insecureSession');
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
 
   const { data } = await getClient().query({
     query: gql`

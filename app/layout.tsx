@@ -20,7 +20,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const insecureSessionToken = cookies().get('insecureSession');
+  const insecureSessionToken = cookies().get('sessionToken');
   const { data } = await getClient().query({
     query: gql`
       query LoggedInUser($insecureSessionToken: String!) {
