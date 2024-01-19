@@ -9,6 +9,6 @@ export async function logout() {
   if (!insecureSessionTokenCookie) return undefined;
   // FIXME: Delete the session from the database
 
-  // set the cookie to be expired
+  // Remove cookie from the browser
   await cookies().set('sessionToken', '', { maxAge: -1 });
 }
