@@ -19,9 +19,9 @@ const createAnimal = gql`
   }
 `;
 
-const deleteAnimalByIdMutation = gql`
-  mutation DeleteAnimalById($id: ID!) {
-    deleteAnimalById(id: $id) {
+const deleteAnimalMutation = gql`
+  mutation DeleteAnimal($id: ID!) {
+    deleteAnimal(id: $id) {
       id
     }
   }
@@ -90,7 +90,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [deleteAnimalMutationHandler] = useMutation(deleteAnimalByIdMutation, {
+  const [deleteAnimalMutationHandler] = useMutation(deleteAnimalMutation, {
     onError: (error) => {
       setOnError(error.message);
     },
