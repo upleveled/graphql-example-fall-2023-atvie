@@ -1,6 +1,5 @@
 import Image from 'next/image';
-
-// import smilingCat from '../public/images/smiling-cat.jpeg';
+import smilingCat from '../public/images/smiling-cat.jpeg';
 
 export default function HomePage() {
   return (
