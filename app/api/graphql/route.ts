@@ -3,6 +3,7 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { GraphQLError } from 'graphql';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
@@ -21,7 +22,7 @@ export type GraphQlResponseBody =
   | Error;
 
 type GraphQLContext = {
-  req: NextRequest;
+  insecureSessionToken: RequestCookie | undefined;
 };
 
 type AnimalInput = {
@@ -94,15 +95,12 @@ const resolvers = {
       args: { id: string },
       context: GraphQLContext,
     ) => {
-      const insecureSessionTokenCookie =
-        context.req.cookies.get('sessionToken');
-
-      if (!insecureSessionTokenCookie) {
+      if (!context.insecureSessionToken) {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalByInsecureSessionToken(
         parseInt(args.id),
-        insecureSessionTokenCookie.value,
+        context.insecureSessionToken.value,
       );
     },
 
@@ -111,10 +109,7 @@ const resolvers = {
       args: AnimalInput & { id: string },
       context: GraphQLContext,
     ) => {
-      const insecureSessionTokenCookie =
-        context.req.cookies.get('sessionToken');
-
-      if (!insecureSessionTokenCookie) {
+      if (!context.insecureSessionToken) {
         throw new GraphQLError('Unauthorized operation');
       }
 
@@ -132,7 +127,7 @@ const resolvers = {
         args.firstName,
         args.type,
         args.accessory,
-        insecureSessionTokenCookie.value,
+        context.insecureSessionToken.value,
       );
     },
 
@@ -186,7 +181,6 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     const insecureSessionToken = await req.cookies.get('sessionToken');
 
     return {
-      req,
       insecureSessionToken,
     };
   },
