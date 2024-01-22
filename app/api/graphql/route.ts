@@ -22,6 +22,7 @@ export type GraphQlResponseBody =
   | Error;
 
 type GraphQLContext = {
+  // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
   insecureSessionTokenCookie: RequestCookie | undefined;
 };
 
