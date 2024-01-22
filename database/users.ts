@@ -5,7 +5,7 @@ import { sql } from './connect';
 export const getUserBySessionToken = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
   async (insecureSessionToken: string) => {
-    // FIXME: Remove this early return when proper token validation is implemented (see FIXME in query below)
+    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
