@@ -49,7 +49,7 @@ export default async function RootLayout({
             <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
-          <span>{user?.username}</span>
+          <div>{user?.username}</div>
           {user?.username ? <LogoutButton /> : <Link href="/login">Login</Link>}
         </nav>
         <ApolloClientProvider>{children}</ApolloClientProvider>
