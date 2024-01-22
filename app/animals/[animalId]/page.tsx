@@ -18,8 +18,8 @@ type Animal = {
 export default async function AnimalPage(props: Props) {
   const { data } = await getClient().query<Animal>({
     query: gql`
-      query GetAnimalById($id: ID! = ${props.params.animalId}){
-        animal(id: $id){
+      query GetAnimalById($id: ID! = ${props.params.animalId}) {
+        animal(id: $id) {
           id
           firstName
           type

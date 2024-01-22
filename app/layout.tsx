@@ -52,7 +52,7 @@ export default async function RootLayout({
           >
             <Link href="/">Home</Link>
             <Link href="/animals">Animals</Link>
-            <Link href="/animals/dashboard">Dashboard</Link>
+            <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
           <span>{data.loggedInAnimal?.firstName}</span>

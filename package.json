@@ -2,12 +2,13 @@
   "name": "graphql_example_fall_2023_atvie",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "dev": "next dev",
     "lint": "next lint",
-    "migrate": "ley --require tsm"
+    "migrate": "ley --require tsm",
+    "start": "next start"
   },
   "dependencies": {
     "@apollo/client": "^3.8.5",
@@ -32,8 +33,10 @@
     "@types/node": "^20",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "eslint-config-upleveled": "^5.0.5",
+    "eslint-config-upleveled": "^7.5.0",
     "libpg-query": "^15.0.2",
+    "prettier-plugin-embed": "^0.4.7",
+    "prettier-plugin-sql": "^0.18.0",
     "stylelint": "^15.10.3",
     "stylelint-config-upleveled": "^1.0.2",
     "typescript": "latest"
