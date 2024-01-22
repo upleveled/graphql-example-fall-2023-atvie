@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { getUserByInsecureSessionToken } from '../database/users';
+import { getUserBySessionToken } from '../database/users';
 import { LogoutButton } from './(auth)/logout/LogoutButton';
 import { ApolloClientProvider } from './ApolloClientProvider';
 
@@ -24,7 +24,7 @@ export default async function RootLayout({
 
   const user =
     insecureSessionTokenCookie &&
-    (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
+    (await getUserBySessionToken(insecureSessionTokenCookie.value));
 
   return (
     <html lang="en">

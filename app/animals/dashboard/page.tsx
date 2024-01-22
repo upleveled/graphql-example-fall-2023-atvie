@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getUserByInsecureSessionToken } from '../../../database/users';
+import { getUserBySessionToken } from '../../../database/users';
 import AnimalForm from './AnimalForm';
 
 export default async function DashboardPage() {
@@ -9,7 +9,7 @@ export default async function DashboardPage() {
 
   const user =
     insecureSessionTokenCookie &&
-    (await getUserByInsecureSessionToken(insecureSessionTokenCookie.value));
+    (await getUserBySessionToken(insecureSessionTokenCookie.value));
 
   if (!user) {
     redirect('/login');

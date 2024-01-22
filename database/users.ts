@@ -2,7 +2,7 @@ import { cache } from 'react';
 import { User } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
-export const getUserByInsecureSessionToken = cache(
+export const getUserBySessionToken = cache(
   async (insecureSessionToken: string) => {
     // FIXME: Remove this early return when proper token validation is implemented (see FIXME in query below)
     if (
