@@ -66,7 +66,7 @@ export const updateAnimalBySessionToken = cache(
         first_name = ${firstName},
         type = ${type},
         accessory = ${accessory}
-        -- FIXME: Implement proper token validation with INNER JOIN on sessions table
+        -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
         id = ${id}
       RETURNING
@@ -90,7 +90,7 @@ export const deleteAnimalBySessionToken = cache(
 
     const [animal] = await sql<Animal[]>`
       DELETE FROM animals
-      -- FIXME: Implement proper token validation with INNER JOIN on sessions table
+      -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
         id = ${animalId}
       RETURNING
