@@ -45,12 +45,12 @@ export const createAnimal = cache(
 
 export const updateAnimalBySessionToken = cache(
   async (
+    // FIXME: Rename insecureSessionToken to sessionToken everywhere
+    insecureSessionToken: string,
     id: number,
     firstName: string,
     type: string,
     accessory: string,
-    // FIXME: Rename insecureSessionToken to sessionToken everywhere
-    insecureSessionToken: string,
   ) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
@@ -79,7 +79,7 @@ export const updateAnimalBySessionToken = cache(
 
 export const deleteAnimalBySessionToken = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
-  async (animalId: number, insecureSessionToken: string) => {
+  async (insecureSessionToken: string, animalId: number) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==

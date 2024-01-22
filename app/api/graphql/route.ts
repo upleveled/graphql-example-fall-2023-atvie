@@ -100,8 +100,8 @@ const resolvers = {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalBySessionToken(
-        Number(args.id),
         context.insecureSessionTokenCookie.value,
+        Number(args.id),
       );
     },
 
@@ -124,11 +124,11 @@ const resolvers = {
         throw new GraphQLError('Required field missing');
       }
       return await updateAnimalBySessionToken(
+        context.insecureSessionTokenCookie.value,
         Number(args.id),
         args.firstName,
         args.type,
         args.accessory,
-        context.insecureSessionTokenCookie.value,
       );
     },
 
