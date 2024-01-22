@@ -165,19 +165,20 @@ const apolloServer = new ApolloServer({
   schema,
 });
 
-const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
-  context: async (req) => {
-    // FIXME: Implement secure authentication and Authorization
-    const fakeSessionToken = req.cookies.get('fakeSession');
+const apolloServerWithNextHandler =
+  startServerAndCreateNextHandler<NextRequest>(apolloServer, {
+    context: async (req) => {
+      // FIXME: Implement secure authentication and Authorization
+      const fakeSessionToken = req.cookies.get('fakeSession');
 
-    const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
+      const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
 
-    return {
-      req,
-      isAdmin,
-    };
-  },
-});
+      return {
+        req,
+        isAdmin,
+      };
+    },
+  });
 
 // This setup is incomplete without type annotation
 // export async function GET(req: NextRequest) {
@@ -191,11 +192,15 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
 export async function GET(
   req: NextRequest,
 ): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+  return (await apolloServerWithNextHandler(
+    req,
+  )) as NextResponse<GraphQlResponseBody>;
 }
 
 export async function POST(
   req: NextRequest,
 ): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+  return (await apolloServerWithNextHandler(
+    req,
+  )) as NextResponse<GraphQlResponseBody>;
 }
