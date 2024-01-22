@@ -1,15 +1,6 @@
-import { setContext } from '@apollo/client/link/context';
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { registerApolloClient } from '@apollo/experimental-nextjs-app-support/rsc';
-import { cookies, headers } from 'next/headers';
-
-const applicationContext = setContext(() => {
-  return {
-    headers: {
-      cookie: `fakeSession=${cookies().get('fakeSession')?.value}`,
-    },
-  };
-});
+import { headers } from 'next/headers';
 
 export const { getClient } = registerApolloClient(() => {
   const link = new HttpLink({
@@ -20,6 +11,6 @@ export const { getClient } = registerApolloClient(() => {
   headers();
   return new ApolloClient({
     cache: new InMemoryCache(),
-    link: applicationContext.concat(link),
+    link,
   });
 });

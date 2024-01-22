@@ -72,18 +72,18 @@ export const deleteAnimalById = cache(async (id: number) => {
   return animal;
 });
 
-export const getLoggedInAnimalByToken = cache(async (firstName: string) => {
+export const getAnimalByFirstName = cache(async (firstName: string) => {
   if (!firstName) {
     return undefined;
   }
 
   const [animal] = await sql<Animal[]>`
-      SELECT
-        *
-      FROM
-        animals
-      WHERE
-        first_name = ${firstName}
+    SELECT
+      *
+    FROM
+      animals
+    WHERE
+      first_name = ${firstName}
   `;
   return animal;
 });

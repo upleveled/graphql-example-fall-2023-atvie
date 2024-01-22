@@ -8,12 +8,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
   deleteAnimalById,
+  getAnimalByFirstName,
   getAnimalById,
   getAnimals,
-  getLoggedInAnimalByToken,
   updateAnimalById,
 } from '../../../database/animals';
-import { getAnimalOwnerBySessionToken } from '../../../database/users';
+import { isUserAdminBySessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphQlResponseBody =
@@ -22,8 +22,8 @@ export type GraphQlResponseBody =
     }
   | Error;
 
-type FakeAuthenticatedAnimalOwner = {
-  isAnimalOwner: boolean;
+type FakeAdminAnimalContext = {
+  isAdmin: boolean;
 };
 
 type AnimalInput = {
@@ -43,7 +43,7 @@ const typeDefs = gql`
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInAnimal: Animal
+    loggedInAnimalByFirstName(firstName: String!): Animal
   }
 
   type Mutation {
@@ -72,18 +72,11 @@ const resolvers = {
       return await getAnimalById(parseInt(args.id));
     },
 
-    loggedInAnimal: async (
+    loggedInAnimalByFirstName: async (
       parent: null,
-      args: null,
-      contextValue: {
-        fakeSessionToken: {
-          value: string;
-        };
-      },
+      args: { firstName: string },
     ) => {
-      return await getLoggedInAnimalByToken(
-        contextValue.fakeSessionToken.value,
-      );
+      return await getAnimalByFirstName(args.firstName);
     },
   },
 
@@ -98,16 +91,15 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field is missing');
       }
-
       return await createAnimal(args.firstName, args.type, args.accessory);
     },
 
     deleteAnimalById: async (
       parent: null,
       args: { id: string },
-      contextValue: FakeAuthenticatedAnimalOwner,
+      context: FakeAdminAnimalContext,
     ) => {
-      if (!contextValue.isAnimalOwner) {
+      if (!context.isAdmin) {
         throw new GraphQLError('Unauthorized operation');
       }
       return await deleteAnimalById(parseInt(args.id));
@@ -134,7 +126,10 @@ const resolvers = {
       );
     },
 
-    login: (parent: null, args: { username: string; password: string }) => {
+    login: async (
+      parent: null,
+      args: { username: string; password: string },
+    ) => {
       //  FIXME: Implement secure authentication
       if (
         typeof args.username !== 'string' ||
@@ -155,6 +150,8 @@ const resolvers = {
         path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
+
+      return await getAnimalByFirstName(args.username);
     },
   },
 };
@@ -173,14 +170,11 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
     // FIXME: Implement secure authentication and Authorization
     const fakeSessionToken = req.cookies.get('fakeSession');
 
-    const isAnimalOwner = await getAnimalOwnerBySessionToken(
-      fakeSessionToken?.value,
-    );
+    const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
 
     return {
       req,
-      isAnimalOwner,
-      fakeSessionToken,
+      isAdmin,
     };
   },
 });

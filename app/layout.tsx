@@ -2,6 +2,7 @@ import './globals.css';
 import { gql } from '@apollo/client';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { getClient } from '../util/apolloClient';
 import { LogoutButton } from './(auth)/logout/LogoutButton';
@@ -19,10 +20,11 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const fakeSessionToken = cookies().get('fakeSession');
   const { data } = await getClient().query({
     query: gql`
-      query LoggedInAnimal {
-        loggedInAnimal {
+      query LoggedInAnimal($firstName: String!) {
+        loggedInAnimalByFirstName(firstName: $firstName) {
           id
           firstName
           type
@@ -30,6 +32,9 @@ export default async function RootLayout({
         }
       }
     `,
+    variables: {
+      firstName: fakeSessionToken?.value || '',
+    },
   });
 
   return (
@@ -55,8 +60,8 @@ export default async function RootLayout({
             <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
-          <span>{data.loggedInAnimal?.firstName}</span>
-          {data.loggedInAnimal?.firstName ? (
+          <span>{data.loggedInAnimalByFirstName?.firstName}</span>
+          {data.loggedInAnimalByFirstName?.firstName ? (
             <LogoutButton />
           ) : (
             <Link href="/login">Login</Link>
