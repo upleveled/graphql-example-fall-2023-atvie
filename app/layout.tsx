@@ -29,21 +29,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav
-          style={{
-            width: '100%',
-            backgroundColor: 'lightblue',
-            padding: '1rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              gap: '10px',
-            }}
-          >
+        <nav>
+          <div>
             <Link href="/">Home</Link>
             <Link href="/animals">Animals</Link>
             <Link href="/animals/dashboard">Animal Dashboard</Link>
