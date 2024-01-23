@@ -4,7 +4,9 @@ import React from 'react';
 import { getSafeReturnToPath } from '../../../util/validation';
 import LoginForm from './LoginForm';
 
-type Props = { searchParams: { returnTo?: string | string[] } };
+type Props = {
+  searchParams: { returnTo?: string | string[] };
+};
 
 export default function LoginPage({ searchParams }: Props) {
   const fakeSessionToken = cookies().get('fakeSession');
