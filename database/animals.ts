@@ -78,12 +78,12 @@ export const getAnimalByFirstName = cache(async (firstName: string) => {
   }
 
   const [animal] = await sql<Animal[]>`
-      SELECT
-        *
-      FROM
-        animals
-      WHERE
-        first_name = ${firstName}
+    SELECT
+      *
+    FROM
+      animals
+    WHERE
+      first_name = ${firstName}
   `;
   return animal;
 });
