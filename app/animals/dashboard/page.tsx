@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   });
 
   if (!data.loggedInAnimalByFirstName) {
-    redirect('/login');
+    redirect('/login?returnTo=/animals/dashboard');
   }
 
   return <AnimalForm />;
