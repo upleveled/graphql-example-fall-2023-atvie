@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     (await getUserBySessionToken(insecureSessionTokenCookie.value));
 
   if (!user) {
-    redirect('/login');
+    redirect('/login?returnTo=/animals/dashboard');
   }
 
   return <AnimalForm />;
