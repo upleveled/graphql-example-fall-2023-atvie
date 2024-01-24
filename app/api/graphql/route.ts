@@ -161,6 +161,26 @@ const resolvers = {
 
       return await getAnimalByFirstName(args.username);
     },
+
+    createNote: (
+      parent: null,
+      args: { title: string; textContent: string },
+    ) => {
+      if (
+        typeof args.title !== 'string' ||
+        typeof args.textContent !== 'string' ||
+        !args.title ||
+        !args.textContent
+      ) {
+        throw new GraphQLError('Required field missing');
+      }
+
+      return {
+        id: '1',
+        title: args.title,
+        textContent: args.textContent,
+      };
+    },
   },
 };
 
