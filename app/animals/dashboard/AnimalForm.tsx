@@ -19,7 +19,7 @@ const createAnimal = gql`
   }
 `;
 
-const deleteAnimalMutation = gql`
+const deleteAnimal = gql`
   mutation DeleteAnimal($id: ID!) {
     deleteAnimal(id: $id) {
       id
@@ -27,8 +27,8 @@ const deleteAnimalMutation = gql`
   }
 `;
 
-const getAnimals = gql`
-  query GetAnimals {
+const animals = gql`
+  query Animals {
     animals {
       id
       firstName
@@ -38,7 +38,7 @@ const getAnimals = gql`
   }
 `;
 
-const updateAnimalMutation = gql`
+const updateAnimal = gql`
   mutation UpdateAnimal(
     $id: ID!
     $firstNameOnEditInput: String!
@@ -69,7 +69,7 @@ export default function AnimalForm() {
   const [accessoryOnEditInput, setAccessoryOnEditInput] = useState('');
   const [onEditId, setOnEditId] = useState<number | undefined>();
 
-  const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(getAnimals);
+  const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(animals);
 
   const [createAnimalHandler] = useMutation(createAnimal, {
     variables: {
@@ -90,7 +90,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [deleteAnimalMutationHandler] = useMutation(deleteAnimalMutation, {
+  const [deleteAnimalHandler] = useMutation(deleteAnimal, {
     onError: (error) => {
       setOnError(error.message);
     },
@@ -101,7 +101,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [handleUpdateAnimal] = useMutation(updateAnimalMutation, {
+  const [updateAnimalHandler] = useMutation(updateAnimal, {
     variables: {
       id: onEditId,
       firstNameOnEditInput,
@@ -197,7 +197,7 @@ export default function AnimalForm() {
             )}
             <button
               onClick={async () => {
-                await deleteAnimalMutationHandler({
+                await deleteAnimalHandler({
                   variables: {
                     id: animal.id,
                   },
@@ -210,7 +210,7 @@ export default function AnimalForm() {
             {isEditing ? (
               <button
                 onClick={async () => {
-                  await handleUpdateAnimal();
+                  await updateAnimalHandler();
                   setOnEditId(undefined);
                 }}
               >
