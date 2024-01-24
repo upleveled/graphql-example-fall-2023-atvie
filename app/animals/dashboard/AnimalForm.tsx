@@ -41,15 +41,15 @@ const animals = gql`
 const updateAnimal = gql`
   mutation UpdateAnimal(
     $id: ID!
-    $firstNameOnEditInput: String!
-    $typeOnEditInput: String!
-    $accessoryOnEditInput: String
+    $firstName: String!
+    $type: String!
+    $accessory: String
   ) {
     updateAnimal(
       id: $id
-      firstName: $firstNameOnEditInput
-      type: $typeOnEditInput
-      accessory: $accessoryOnEditInput
+      firstName: $firstName
+      type: $type
+      accessory: $accessory
     ) {
       id
       firstName
@@ -60,14 +60,18 @@ const updateAnimal = gql`
 `;
 
 export default function AnimalForm() {
+  const [id, setId] = useState(0);
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
   const [onError, setOnError] = useState('');
-  const [firstNameOnEditInput, setFirstNameOnEditInput] = useState('');
-  const [typeOnEditInput, setTypeOnEditInput] = useState('');
-  const [accessoryOnEditInput, setAccessoryOnEditInput] = useState('');
-  const [onEditId, setOnEditId] = useState<number | undefined>();
+
+  function resetFormStates() {
+    setId(0);
+    setFirstName('');
+    setType('');
+    setAccessory('');
+  }
 
   const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(animals);
 
@@ -82,11 +86,10 @@ export default function AnimalForm() {
       setOnError(error.message);
     },
 
-    onCompleted: () => {
+    onCompleted: async () => {
+      resetFormStates();
       setOnError('');
-      setAccessory('');
-      setType('');
-      setFirstName('');
+      await refetch();
     },
   });
 
@@ -96,6 +99,7 @@ export default function AnimalForm() {
     },
 
     onCompleted: async () => {
+      resetFormStates();
       setOnError('');
       await refetch();
     },
@@ -103,10 +107,10 @@ export default function AnimalForm() {
 
   const [updateAnimalHandler] = useMutation(updateAnimal, {
     variables: {
-      id: onEditId,
-      firstNameOnEditInput,
-      typeOnEditInput,
-      accessoryOnEditInput,
+      id,
+      firstName,
+      type,
+      accessory,
     },
 
     onError: (error) => {
