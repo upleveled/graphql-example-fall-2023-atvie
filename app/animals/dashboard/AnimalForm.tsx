@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
+import styles from './AnimalsForm.module.scss';
 
 const createAnimal = gql`
   mutation CreateAnimal(
@@ -125,52 +126,66 @@ export default function AnimalForm() {
   });
 
   return (
-    <div>
-      Animal Dashboard
-      <br />
-      <label>
-        First Name
-        <input
-          value={firstName}
-          onChange={(event) => {
-            setFirstName(event.currentTarget.value);
-          }}
-        />
-      </label>
-      <br />
-      <label>
-        Type
-        <input
-          value={type}
-          onChange={(event) => {
-            setType(event.currentTarget.value);
-          }}
-        />
-      </label>
-      <br />
-      <label>
-        Accessory
-        <input
-          value={accessory}
-          onChange={(event) => {
-            setAccessory(event.currentTarget.value);
-          }}
-        />
-      </label>
-      <br />
-      <br />
-      <button onClick={async () => await createAnimalHandler()}>
-        Create Animal
-      </button>
-      <br />
-      <br />
-      <hr />
-      <br />
-      {data.animals.map((animal) => {
-        const isEditing = onEditId === animal.id;
-        return (
-          <div key={`animal-div-${animal.id}`}>
-            {isEditing ? (
+    <>
+      <h1 className={styles.title}>Animal Dashboard</h1>
+      <div className={styles.dashboard}>
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Accessory</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.animals.map((animal) => (
+                <tr
+                  key={`animal-${animal.id}`}
+                  className={id === animal.id ? styles.selectedItem : ''}
+                >
+                  <td>{animal.firstName}</td>
+                  <td>{animal.type}</td>
+                  <td>{animal.accessory}</td>
+                  <td className={styles.buttonCell}>
+                    <button
+                      onClick={() => {
+                        setId(animal.id);
+                        setFirstName(animal.firstName);
+                        setType(animal.type);
+                        setAccessory(animal.accessory || '');
+                      }}
+                      disabled={id === animal.id && true}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await deleteAnimalHandler({
+                          variables: {
+                            id: animal.id,
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className={styles.animalForm}>
+          <h2>{id ? 'Edit Animal' : 'Add Animal'}</h2>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+          >
+            <label>
+              Name
               <input
                 onChange={(event) => setFirstName(event.currentTarget.value)}
                 value={firstName}
