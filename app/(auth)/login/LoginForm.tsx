@@ -36,7 +36,11 @@ export default function LoginForm() {
   return (
     <>
       <h1>Login</h1>
-      <div>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+      >
         <label>
           username
           <input
@@ -64,7 +68,7 @@ export default function LoginForm() {
         >
           Login
         </button>
-      </div>
+      </form>
       <div className="error">{onError}</div>
     </>
   );
