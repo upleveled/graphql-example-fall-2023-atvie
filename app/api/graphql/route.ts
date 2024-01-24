@@ -40,6 +40,12 @@ const typeDefs = gql`
     accessory: String
   }
 
+  type Note {
+    id: ID!
+    title: String!
+    textContent: String!
+  }
+
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
@@ -59,6 +65,8 @@ const typeDefs = gql`
     ): Animal
 
     login(username: String!, password: String!): Animal
+
+    createNote(title: String!, textContent: String!): Note
   }
 `;
 
