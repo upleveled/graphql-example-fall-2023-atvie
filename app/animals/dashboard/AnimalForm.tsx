@@ -118,6 +118,7 @@ export default function AnimalForm() {
     },
 
     onCompleted: async () => {
+      resetFormStates();
       setOnError('');
       await refetch();
     },
@@ -171,71 +172,41 @@ export default function AnimalForm() {
           <div key={`animal-div-${animal.id}`}>
             {isEditing ? (
               <input
-                value={firstNameOnEditInput}
-                onChange={(event) => {
-                  setFirstNameOnEditInput(event.currentTarget.value);
-                }}
+                onChange={(event) => setFirstName(event.currentTarget.value)}
+                value={firstName}
               />
-            ) : (
-              <span>{animal.firstName}</span>
-            )}
-            {isEditing ? (
+            </label>
+            <label>
+              Type
               <input
-                value={typeOnEditInput}
-                onChange={(event) => {
-                  setTypeOnEditInput(event.currentTarget.value);
-                }}
+                onChange={(event) => setType(event.currentTarget.value)}
+                value={type}
               />
-            ) : (
-              <span>{animal.type}</span>
-            )}
-            {isEditing ? (
+            </label>
+            <label>
+              Accessory
               <input
-                value={accessoryOnEditInput}
-                onChange={(event) => {
-                  setAccessoryOnEditInput(event.currentTarget.value);
-                }}
+                onChange={(event) => setAccessory(event.currentTarget.value)}
+                value={accessory}
               />
-            ) : (
-              <span>{animal.accessory}</span>
-            )}
-            <button
-              onClick={async () => {
-                await deleteAnimalHandler({
-                  variables: {
-                    id: animal.id,
-                  },
-                });
-              }}
-            >
-              X
-            </button>
-
-            {isEditing ? (
+            </label>
+            {id ? (
               <button
                 onClick={async () => {
                   await updateAnimalHandler();
-                  setOnEditId(undefined);
                 }}
               >
-                Save
+                Save Changes
               </button>
             ) : (
-              <button
-                onClick={() => {
-                  setOnEditId(animal.id);
-                  setFirstNameOnEditInput(animal.firstName);
-                  setAccessoryOnEditInput(animal.accessory || '');
-                  setTypeOnEditInput(animal.type);
-                }}
-              >
-                Edit
+              <button onClick={async () => await createAnimalHandler()}>
+                Add Animal
               </button>
             )}
-          </div>
-        );
-      })}
-      <p className="error">{onError}</p>
-    </div>
+          </form>
+          <p className="error">{onError}</p>
+        </div>
+      </div>
+    </>
   );
 }
