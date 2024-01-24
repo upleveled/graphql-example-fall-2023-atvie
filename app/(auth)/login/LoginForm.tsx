@@ -34,7 +34,7 @@ export default function LoginForm() {
     },
   });
   return (
-    <div>
+    <>
       <h1>Login</h1>
       <div>
         <label>
@@ -66,6 +66,6 @@ export default function LoginForm() {
         </button>
       </div>
       <div className="error">{onError}</div>
-    </div>
+    </>
   );
 }
