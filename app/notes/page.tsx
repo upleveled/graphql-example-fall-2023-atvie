@@ -20,9 +20,5 @@ export default async function NotesPage() {
   // 3. Display the notes for the current logged in user
   const notes = await getNotesBySessionToken(sessionTokenCookie.value);
 
-  return (
-    <div>
-      <CreateNoteForm notes={notes} username={user.username} />
-    </div>
-  );
+  return <CreateNoteForm notes={notes} username={user.username} />;
 }
