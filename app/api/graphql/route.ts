@@ -13,6 +13,8 @@ import {
   getAnimals,
   updateAnimalBySessionToken,
 } from '../../../database/animals';
+import { createNote } from '../../../database/notes';
+import { getUserBySessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphqlResponseBody =
@@ -45,10 +47,11 @@ const typeDefs = gql`
     username: String
   }
 
-   type Note {
+  type Note {
     id: ID!
     title: String!
     textContent: String!
+  }
 
   type Query {
     animals: [Animal]
@@ -70,6 +73,7 @@ const typeDefs = gql`
     login(username: String!, password: String!): User
 
     createNote(title: String!, textContent: String!): Note
+  }
 `;
 
 const resolvers = {
@@ -168,9 +172,10 @@ const resolvers = {
       );
     },
 
-    createNote: (
+    createNote: async (
       parent: null,
       args: { title: string; textContent: string },
+      context: GraphqlContext,
     ) => {
       if (
         typeof args.title !== 'string' ||
@@ -181,11 +186,25 @@ const resolvers = {
         throw new GraphQLError('Required field missing');
       }
 
-      return {
-        id: '1',
-        title: args.title,
-        textContent: args.textContent,
-      };
+      if (!context.insecureSessionTokenCookie) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
+      // FIXME: Remove this query when proper session token validation is completed in the database query
+      const user = await getUserBySessionToken(
+        context.insecureSessionTokenCookie.value,
+      );
+      if (!user) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
+      return await createNote(
+        context.insecureSessionTokenCookie.value,
+        // FIXME: Remove userId from createNote arguments and use session token to get userId (see FIXME in query below)
+        user.id,
+        args.title,
+        args.textContent,
+      );
     },
   },
 };
