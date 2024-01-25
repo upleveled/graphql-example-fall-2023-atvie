@@ -1,26 +1,17 @@
-import { gql } from '@apollo/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getClient } from '../../../util/apolloClient';
+import { getUserBySessionToken } from '../../../database/users';
 import AnimalForm from './AnimalForm';
 
 export default async function DashboardPage() {
-  const fakeSessionToken = cookies().get('fakeSession');
+  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
 
-  const { data } = await getClient().query({
-    query: gql`
-      query LoggedInAnimal($firstName: String!) {
-        loggedInAnimalByFirstName(firstName: $firstName) {
-          firstName
-        }
-      }
-    `,
-    variables: {
-      firstName: fakeSessionToken?.value || '',
-    },
-  });
+  const user =
+    insecureSessionTokenCookie &&
+    (await getUserBySessionToken(insecureSessionTokenCookie.value));
 
-  if (!data.loggedInAnimalByFirstName) {
+  if (!user) {
     redirect('/login?returnTo=/animals/dashboard');
   }
 

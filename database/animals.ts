@@ -43,14 +43,30 @@ export const createAnimal = cache(
   },
 );
 
-export const updateAnimalById = cache(
-  async (id: number, firstName: string, type: string, accessory: string) => {
+export const updateAnimalBySessionToken = cache(
+  async (
+    // FIXME: Rename insecureSessionToken to sessionToken everywhere
+    insecureSessionToken: string,
+    id: number,
+    firstName: string,
+    type: string,
+    accessory: string,
+  ) => {
+    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
+    if (
+      insecureSessionToken !==
+      'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
+    ) {
+      return undefined;
+    }
+
     const [animal] = await sql<Animal[]>`
       UPDATE animals
       SET
         first_name = ${firstName},
         type = ${type},
         accessory = ${accessory}
+        -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
         id = ${id}
       RETURNING
@@ -61,29 +77,25 @@ export const updateAnimalById = cache(
   },
 );
 
-export const deleteAnimalById = cache(async (id: number) => {
-  const [animal] = await sql<Animal[]>`
-    DELETE FROM animals
-    WHERE
-      id = ${id}
-    RETURNING
-      *
-  `;
-  return animal;
-});
+export const deleteAnimalBySessionToken = cache(
+  // FIXME: Rename insecureSessionToken to sessionToken everywhere
+  async (insecureSessionToken: string, animalId: number) => {
+    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
+    if (
+      insecureSessionToken !==
+      'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
+    ) {
+      return undefined;
+    }
 
-export const getAnimalByFirstName = cache(async (firstName: string) => {
-  if (!firstName) {
-    return undefined;
-  }
-
-  const [animal] = await sql<Animal[]>`
-      SELECT
-        *
-      FROM
-        animals
+    const [animal] = await sql<Animal[]>`
+      DELETE FROM animals
+      -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
-        first_name = ${firstName}
-  `;
-  return animal;
-});
+        id = ${animalId}
+      RETURNING
+        *
+    `;
+    return animal;
+  },
+);
