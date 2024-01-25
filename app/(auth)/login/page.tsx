@@ -17,5 +17,5 @@ export default function LoginPage({ searchParams }: Props) {
   if (insecureSessionTokenCookie?.value) {
     redirect(getSafeReturnToPath(searchParams.returnTo) || '/');
   }
-  return <LoginForm />;
+  return <LoginForm returnTo={searchParams.returnTo} />;
 }
