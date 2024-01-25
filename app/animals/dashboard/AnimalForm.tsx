@@ -20,14 +20,6 @@ const createAnimalMutation = gql`
   }
 `;
 
-const deleteAnimalMutation = gql`
-  mutation DeleteAnimal($id: ID!) {
-    deleteAnimal(id: $id) {
-      id
-    }
-  }
-`;
-
 const animals = gql`
   query Animals {
     animals {
@@ -56,6 +48,14 @@ const updateAnimalMutation = gql`
       firstName
       type
       accessory
+    }
+  }
+`;
+
+const deleteAnimalMutation = gql`
+  mutation DeleteAnimal($id: ID!) {
+    deleteAnimal(id: $id) {
+      id
     }
   }
 `;
@@ -94,18 +94,6 @@ export default function AnimalForm() {
     },
   });
 
-  const [deleteAnimal] = useMutation(deleteAnimalMutation, {
-    onError: (error) => {
-      setOnError(error.message);
-    },
-
-    onCompleted: async () => {
-      resetFormStates();
-      setOnError('');
-      await refetch();
-    },
-  });
-
   const [updateAnimal] = useMutation(updateAnimalMutation, {
     variables: {
       id,
@@ -120,6 +108,17 @@ export default function AnimalForm() {
 
     onCompleted: async () => {
       resetFormStates();
+      setOnError('');
+      await refetch();
+    },
+  });
+
+  const [deleteAnimal] = useMutation(deleteAnimalMutation, {
+    onError: (error) => {
+      setOnError(error.message);
+    },
+
+    onCompleted: async () => {
       setOnError('');
       await refetch();
     },
