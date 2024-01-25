@@ -1,4 +1,5 @@
 'use client';
+
 import { gql, useMutation } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
@@ -149,13 +150,13 @@ export default function AnimalForm() {
                   <td>{animal.accessory}</td>
                   <td className={styles.buttonCell}>
                     <button
+                      disabled={id === animal.id && true}
                       onClick={() => {
                         setId(animal.id);
                         setFirstName(animal.firstName);
                         setType(animal.type);
                         setAccessory(animal.accessory || '');
                       }}
-                      disabled={id === animal.id && true}
                     >
                       Edit
                     </button>
