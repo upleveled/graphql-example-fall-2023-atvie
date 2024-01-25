@@ -17,7 +17,7 @@ type Props = {
   returnTo?: string | string[];
 };
 
-export default function LoginForm({ returnTo }: Props) {
+export default function LoginForm(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [onError, setOnError] = useState('');
@@ -34,7 +34,7 @@ export default function LoginForm({ returnTo }: Props) {
     },
 
     onCompleted: () => {
-      router.push(getSafeReturnToPath(returnTo) || '/');
+      router.push(getSafeReturnToPath(props.returnTo) || '/');
       router.refresh();
     },
   });
