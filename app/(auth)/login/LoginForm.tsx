@@ -18,7 +18,7 @@ export default function LoginForm() {
   const [onError, setOnError] = useState('');
   const router = useRouter();
 
-  const [loginHandler] = useMutation(loginMutation, {
+  const [login] = useMutation(loginMutation, {
     variables: {
       username,
       password,
@@ -37,8 +37,9 @@ export default function LoginForm() {
     <>
       <h1>Login</h1>
       <form
-        onSubmit={(event) => {
+        onSubmit={async (event) => {
           event.preventDefault();
+          await login();
         }}
       >
         <label>
@@ -61,13 +62,7 @@ export default function LoginForm() {
             }}
           />
         </label>
-        <button
-          onClick={async () => {
-            await loginHandler();
-          }}
-        >
-          Login
-        </button>
+        <button>Login</button>
       </form>
       <div className="error">{onError}</div>
     </>
