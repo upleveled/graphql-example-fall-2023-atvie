@@ -190,7 +190,7 @@ const resolvers = {
         throw new GraphQLError('You must be logged in to create a note');
       }
 
-      // FIXME: Remove this query when proper session token validation is completed in the database query
+      // FIXME: Remove this query function when proper session token validation is completed in the database query
       const user = await getUserBySessionToken(
         context.insecureSessionTokenCookie.value,
       );
@@ -200,7 +200,7 @@ const resolvers = {
 
       return await createNote(
         context.insecureSessionTokenCookie.value,
-        // FIXME: Remove userId from createNote arguments and use session token to get userId (see FIXME in query below)
+        // FIXME: Remove userId from createNote arguments and use session token to get userId
         user.id,
         args.title,
         args.textContent,
