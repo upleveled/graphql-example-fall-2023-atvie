@@ -179,8 +179,13 @@ export default function AnimalForm() {
         <div className={styles.animalForm}>
           <h2>{id ? 'Edit Animal' : 'Add Animal'}</h2>
           <form
-            onSubmit={(event) => {
+            onSubmit={async (event) => {
               event.preventDefault();
+              if (id) {
+                await updateAnimal();
+              } else {
+                await createAnimal();
+              }
             }}
           >
             <label>
@@ -204,19 +209,7 @@ export default function AnimalForm() {
                 onChange={(event) => setAccessory(event.currentTarget.value)}
               />
             </label>
-            {id ? (
-              <button
-                onClick={async () => {
-                  await updateAnimal();
-                }}
-              >
-                Save Changes
-              </button>
-            ) : (
-              <button onClick={async () => await createAnimal()}>
-                Add Animal
-              </button>
-            )}
+            <button>{id ? 'Save Changes' : 'Add Animal'}</button>
           </form>
           <div className="error">{onError}</div>
         </div>
