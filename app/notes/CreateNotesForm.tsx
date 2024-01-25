@@ -1,8 +1,9 @@
 'use client';
 import { gql, useMutation } from '@apollo/client';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-const createNote = gql`
+const createNoteMutation = gql`
   mutation CreateNote($title: String!, $textContent: String!) {
     createNote(title: $title, textContent: $textContent) {
       id
@@ -16,7 +17,9 @@ export default function CreateNotesForm() {
   const [textContent, setTextContent] = useState('');
   const [onError, setOnError] = useState('');
 
-  const [createNoteHandler] = useMutation(createNote, {
+  const router = useRouter();
+
+  const [createNote] = useMutation(createNoteMutation, {
     variables: {
       title,
       textContent,
@@ -29,6 +32,8 @@ export default function CreateNotesForm() {
     onCompleted: () => {
       setTitle('');
       setTextContent('');
+      setOnError('');
+      router.refresh();
     },
   });
 
@@ -37,7 +42,7 @@ export default function CreateNotesForm() {
       <form
         onSubmit={async (event) => {
           event.preventDefault();
-          await createNoteHandler();
+          await createNote();
         }}
       >
         <label>
