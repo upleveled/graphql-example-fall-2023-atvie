@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 import styles from './AnimalsForm.module.scss';
 
-const createAnimal = gql`
+const createAnimalMutation = gql`
   mutation CreateAnimal(
     $firstName: String!
     $type: String!
@@ -20,7 +20,7 @@ const createAnimal = gql`
   }
 `;
 
-const deleteAnimal = gql`
+const deleteAnimalMutation = gql`
   mutation DeleteAnimal($id: ID!) {
     deleteAnimal(id: $id) {
       id
@@ -39,7 +39,7 @@ const animals = gql`
   }
 `;
 
-const updateAnimal = gql`
+const updateAnimalMutation = gql`
   mutation UpdateAnimal(
     $id: ID!
     $firstName: String!
@@ -76,7 +76,7 @@ export default function AnimalForm() {
 
   const { data, refetch } = useSuspenseQuery<{ animals: Animal[] }>(animals);
 
-  const [createAnimalHandler] = useMutation(createAnimal, {
+  const [createAnimal] = useMutation(createAnimalMutation, {
     variables: {
       firstName,
       type,
@@ -94,7 +94,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [deleteAnimalHandler] = useMutation(deleteAnimal, {
+  const [deleteAnimal] = useMutation(deleteAnimalMutation, {
     onError: (error) => {
       setOnError(error.message);
     },
@@ -106,7 +106,7 @@ export default function AnimalForm() {
     },
   });
 
-  const [updateAnimalHandler] = useMutation(updateAnimal, {
+  const [updateAnimal] = useMutation(updateAnimalMutation, {
     variables: {
       id,
       firstName,
@@ -162,7 +162,7 @@ export default function AnimalForm() {
                     </button>
                     <button
                       onClick={async () => {
-                        await deleteAnimalHandler({
+                        await deleteAnimal({
                           variables: {
                             id: animal.id,
                           },
@@ -208,13 +208,13 @@ export default function AnimalForm() {
             {id ? (
               <button
                 onClick={async () => {
-                  await updateAnimalHandler();
+                  await updateAnimal();
                 }}
               >
                 Save Changes
               </button>
             ) : (
-              <button onClick={async () => await createAnimalHandler()}>
+              <button onClick={async () => await createAnimal()}>
                 Add Animal
               </button>
             )}
