@@ -35,6 +35,7 @@ export default function LoginForm({ returnTo }: Props) {
 
     onCompleted: () => {
       router.push(getSafeReturnToPath(returnTo) || '/');
+      router.refresh();
     },
   });
   return (
