@@ -15,13 +15,13 @@ import {
 } from '../../../database/animals';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
-export type GraphQlResponseBody =
+export type GraphqlResponseBody =
   | {
       animal: Animal;
     }
   | Error;
 
-type GraphQLContext = {
+type GraphqlContext = {
   // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
   insecureSessionTokenCookie: RequestCookie | undefined;
 };
@@ -94,7 +94,7 @@ const resolvers = {
     deleteAnimal: async (
       parent: null,
       args: { id: string },
-      context: GraphQLContext,
+      context: GraphqlContext,
     ) => {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
@@ -108,7 +108,7 @@ const resolvers = {
     updateAnimal: async (
       parent: null,
       args: AnimalInput & { id: string },
-      context: GraphQLContext,
+      context: GraphqlContext,
     ) => {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
@@ -195,12 +195,12 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
 
 export async function GET(
   req: NextRequest,
-): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+): Promise<NextResponse<GraphqlResponseBody>> {
+  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
 }
 
 export async function POST(
   req: NextRequest,
-): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+): Promise<NextResponse<GraphqlResponseBody>> {
+  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
 }
