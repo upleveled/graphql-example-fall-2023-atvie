@@ -187,7 +187,7 @@ const resolvers = {
       }
 
       if (!context.insecureSessionTokenCookie) {
-        throw new GraphQLError('Unauthorized operation');
+        throw new GraphQLError('You must be logged in to create a note');
       }
 
       // FIXME: Remove this query when proper session token validation is completed in the database query
