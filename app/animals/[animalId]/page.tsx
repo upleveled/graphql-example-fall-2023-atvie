@@ -1,45 +1,34 @@
-import { gql } from '@apollo/client';
 import Image from 'next/image';
-import { getClient } from '../../../util/apolloClient';
+import Link from 'next/link';
+import { getAnimalById } from '../../../database/animals';
 
 type Props = {
   params: { animalId: string };
 };
 
-type Animal = {
-  animal: {
-    id: number;
-    firstName: string;
-    type: string;
-    accessory: string;
-  };
-};
-
 export default async function AnimalPage(props: Props) {
-  const { data } = await getClient().query<Animal>({
-    query: gql`
-      query GetAnimalById($id: ID! = ${props.params.animalId}) {
-        animal(id: $id) {
-          id
-          firstName
-          type
-          accessory
-        }
-      }
-    `,
-  });
+  const animal = await getAnimalById(Number(props.params.animalId));
+
+  if (!animal) {
+    return (
+      <div>
+        <h1>Animal not found</h1>
+        <Link href="/animals">Go back to animals</Link>
+      </div>
+    );
+  }
 
   return (
     <div>
       This is a single animal page
-      <h1>{data.animal.firstName}</h1>
+      <h1>{animal.firstName}</h1>
       <Image
-        src={`/images/${data.animal.firstName}.png`}
+        src={`/images/${animal.firstName}.png`}
         width={200}
         height={200}
-        alt={data.animal.firstName}
+        alt={animal.firstName}
       />
-      this is a {data.animal.type} carrying {data.animal.accessory}
+      this is a {animal.type} carrying {animal.accessory}
     </div>
   );
 }

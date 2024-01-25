@@ -2,25 +2,28 @@
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { getSafeReturnToPath } from '../../../util/validation';
 
 const loginMutation = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
       id
-      firstName
-      type
-      accessory
+      username
     }
   }
 `;
 
-export default function LoginForm() {
+type Props = {
+  returnTo?: string | string[];
+};
+
+export default function LoginForm(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [onError, setOnError] = useState('');
   const router = useRouter();
 
-  const [loginHandler] = useMutation(loginMutation, {
+  const [login] = useMutation(loginMutation, {
     variables: {
       username,
       password,
@@ -31,14 +34,19 @@ export default function LoginForm() {
     },
 
     onCompleted: () => {
-      // This might not be needed
+      router.push(getSafeReturnToPath(props.returnTo) || '/');
       router.refresh();
     },
   });
   return (
-    <div>
+    <>
       <h1>Login</h1>
-      <div>
+      <form
+        onSubmit={async (event) => {
+          event.preventDefault();
+          await login();
+        }}
+      >
         <label>
           username
           <input
@@ -59,15 +67,9 @@ export default function LoginForm() {
             }}
           />
         </label>
-        <button
-          onClick={async () => {
-            await loginHandler();
-          }}
-        >
-          Login
-        </button>
-      </div>
+        <button>Login</button>
+      </form>
       <div className="error">{onError}</div>
-    </div>
+    </>
   );
 }

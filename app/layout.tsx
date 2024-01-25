@@ -1,10 +1,9 @@
-import './globals.css';
-import { gql } from '@apollo/client';
+import './globals.scss';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { getClient } from '../util/apolloClient';
+import { getUserBySessionToken } from '../database/users';
 import { LogoutButton } from './(auth)/logout/LogoutButton';
 import { ApolloClientProvider } from './ApolloClientProvider';
 
@@ -20,52 +19,25 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const fakeSessionToken = cookies().get('fakeSession');
-  const { data } = await getClient().query({
-    query: gql`
-      query LoggedInAnimal($firstName: String!) {
-        loggedInAnimalByFirstName(firstName: $firstName) {
-          id
-          firstName
-          type
-          accessory
-        }
-      }
-    `,
-    variables: {
-      firstName: fakeSessionToken?.value || '',
-    },
-  });
+  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
+
+  const user =
+    insecureSessionTokenCookie &&
+    (await getUserBySessionToken(insecureSessionTokenCookie.value));
 
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav
-          style={{
-            width: '100%',
-            backgroundColor: 'lightblue',
-            padding: '1rem',
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              gap: '10px',
-            }}
-          >
+        <nav>
+          <div>
             <Link href="/">Home</Link>
             <Link href="/animals">Animals</Link>
             <Link href="/animals/dashboard">Animal Dashboard</Link>
           </div>
 
-          <span>{data.loggedInAnimalByFirstName?.firstName}</span>
-          {data.loggedInAnimalByFirstName?.firstName ? (
-            <LogoutButton />
-          ) : (
-            <Link href="/login">Login</Link>
-          )}
+          <div>{user?.username}</div>
+          {user?.username ? <LogoutButton /> : <Link href="/login">Login</Link>}
         </nav>
         <ApolloClientProvider>{children}</ApolloClientProvider>
       </body>

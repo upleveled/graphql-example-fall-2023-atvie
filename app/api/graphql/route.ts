@@ -3,27 +3,27 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { GraphQLError } from 'graphql';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
-  deleteAnimalById,
-  getAnimalByFirstName,
+  deleteAnimalBySessionToken,
   getAnimalById,
   getAnimals,
-  updateAnimalById,
+  updateAnimalBySessionToken,
 } from '../../../database/animals';
-import { isUserAdminBySessionToken } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
-export type GraphQlResponseBody =
+export type GraphqlResponseBody =
   | {
       animal: Animal;
     }
   | Error;
 
-type FakeAdminAnimalContext = {
-  isAdmin: boolean;
+type GraphqlContext = {
+  // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
+  insecureSessionTokenCookie: RequestCookie | undefined;
 };
 
 type AnimalInput = {
@@ -40,25 +40,29 @@ const typeDefs = gql`
     accessory: String
   }
 
+  type User {
+    id: ID!
+    username: String
+  }
+
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
-    loggedInAnimalByFirstName(firstName: String!): Animal
   }
 
   type Mutation {
     createAnimal(firstName: String!, type: String!, accessory: String): Animal
 
-    deleteAnimalById(id: ID!): Animal
+    deleteAnimal(id: ID!): Animal
 
-    updateAnimalById(
+    updateAnimal(
       id: ID!
       firstName: String!
       type: String!
       accessory: String
     ): Animal
 
-    login(username: String!, password: String!): Animal
+    login(username: String!, password: String!): User
   }
 `;
 
@@ -69,14 +73,7 @@ const resolvers = {
     },
 
     animal: async (parent: null, args: { id: string }) => {
-      return await getAnimalById(parseInt(args.id));
-    },
-
-    loggedInAnimalByFirstName: async (
-      parent: null,
-      args: { firstName: string },
-    ) => {
-      return await getAnimalByFirstName(args.firstName);
+      return await getAnimalById(Number(args.id));
     },
   },
 
@@ -94,21 +91,29 @@ const resolvers = {
       return await createAnimal(args.firstName, args.type, args.accessory);
     },
 
-    deleteAnimalById: async (
+    deleteAnimal: async (
       parent: null,
       args: { id: string },
-      context: FakeAdminAnimalContext,
+      context: GraphqlContext,
     ) => {
-      if (!context.isAdmin) {
+      if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimalById(parseInt(args.id));
+      return await deleteAnimalBySessionToken(
+        context.insecureSessionTokenCookie.value,
+        Number(args.id),
+      );
     },
 
-    updateAnimalById: async (
+    updateAnimal: async (
       parent: null,
       args: AnimalInput & { id: string },
+      context: GraphqlContext,
     ) => {
+      if (!context.insecureSessionTokenCookie) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
       if (
         typeof args.firstName !== 'string' ||
         typeof args.type !== 'string' ||
@@ -118,19 +123,16 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimalById(
-        parseInt(args.id),
+      return await updateAnimalBySessionToken(
+        context.insecureSessionTokenCookie.value,
+        Number(args.id),
         args.firstName,
         args.type,
         args.accessory,
       );
     },
 
-    login: async (
-      parent: null,
-      args: { username: string; password: string },
-    ) => {
-      //  FIXME: Implement secure authentication
+    login: (parent: null, args: { username: string; password: string }) => {
       if (
         typeof args.username !== 'string' ||
         typeof args.password !== 'string' ||
@@ -139,19 +141,25 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-
-      if (args.username !== 'lucia' || args.password !== 'asdf') {
+      // FIXME: Implement secure authentication
+      if (args.username !== 'victor' || args.password !== 'asdf') {
         throw new GraphQLError('Invalid username or password');
       }
 
-      cookies().set('fakeSession', args.username, {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-      });
-
-      return await getAnimalByFirstName(args.username);
+      // FIXME: Create a secure session token cookie:
+      // 1. Generate a token
+      // 2. Store the token in the database
+      // 3. Set a cookie with the token value
+      cookies().set(
+        'sessionToken',
+        'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f',
+        {
+          httpOnly: true,
+          sameSite: 'lax',
+          path: '/',
+          maxAge: 60 * 60 * 24 * 30, // 30 days
+        },
+      );
     },
   },
 };
@@ -167,14 +175,9 @@ const apolloServer = new ApolloServer({
 
 const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
   context: async (req) => {
-    // FIXME: Implement secure authentication and Authorization
-    const fakeSessionToken = req.cookies.get('fakeSession');
-
-    const isAdmin = await isUserAdminBySessionToken(fakeSessionToken?.value);
-
     return {
-      req,
-      isAdmin,
+      // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
+      insecureSessionTokenCookie: await req.cookies.get('sessionToken'),
     };
   },
 });
@@ -190,12 +193,12 @@ const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
 
 export async function GET(
   req: NextRequest,
-): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+): Promise<NextResponse<GraphqlResponseBody>> {
+  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
 }
 
 export async function POST(
   req: NextRequest,
-): Promise<NextResponse<GraphQlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphQlResponseBody>;
+): Promise<NextResponse<GraphqlResponseBody>> {
+  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
 }

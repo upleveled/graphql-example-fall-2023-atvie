@@ -11,10 +11,11 @@ type Props = {
 };
 
 export default function LoginPage({ searchParams }: Props) {
-  const fakeSessionToken = cookies().get('fakeSession');
+  // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
+  const insecureSessionTokenCookie = cookies().get('sessionToken');
 
-  if (fakeSessionToken?.value) {
+  if (insecureSessionTokenCookie?.value) {
     redirect(getSafeReturnToPath(searchParams.returnTo) || '/');
   }
-  return <LoginForm />;
+  return <LoginForm returnTo={searchParams.returnTo} />;
 }
