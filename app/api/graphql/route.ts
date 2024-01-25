@@ -133,7 +133,6 @@ const resolvers = {
     },
 
     login: (parent: null, args: { username: string; password: string }) => {
-      //  FIXME: Implement secure authentication
       if (
         typeof args.username !== 'string' ||
         typeof args.password !== 'string' ||
@@ -142,7 +141,7 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-
+      // FIXME: Implement secure authentication
       if (args.username !== 'victor' || args.password !== 'asdf') {
         throw new GraphQLError('Invalid username or password');
       }
