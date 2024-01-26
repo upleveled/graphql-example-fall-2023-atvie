@@ -9,7 +9,7 @@ type Props = {
   };
 };
 
-export default async function NotePage({ params }: Props) {
+export default async function NotePage(props: Props) {
   // Task: Restrict access to the note page only to the user who created the note
 
   // 1. Checking if the sessionToken cookie exists
@@ -20,7 +20,7 @@ export default async function NotePage({ params }: Props) {
     sessionTokenCookie &&
     (await getNoteBySessionToken(
       sessionTokenCookie.value,
-      Number(params.noteId),
+      Number(props.params.noteId),
     ));
 
   // 3. If there is no note for the current user, show restricted access message
