@@ -127,7 +127,8 @@ export default function AnimalForm() {
 
   return (
     <>
-      <h1 className={styles.title}>Animal Dashboard</h1>
+      <h1>Animal Dashboard</h1>
+
       <div className={styles.dashboard}>
         <div>
           <table>
