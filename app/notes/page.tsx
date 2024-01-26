@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getNotesBySessionToken } from '../../database/notes';
 import { getUserBySessionToken } from '../../database/users';
-import styles from './notes.module.scss';
 import NotesForm from './NotesForm';
+import styles from './notesForm.module.scss';
 
 export default async function NotesPage() {
   // Task: Restrict access to the notes page and only display notes belonging to the current logged in user

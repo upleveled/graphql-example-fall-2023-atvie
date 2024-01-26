@@ -3,7 +3,7 @@
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import styles from './notes.module.scss';
+import styles from './notesForm.module.scss';
 
 const createNoteMutation = gql`
   mutation CreateNote($title: String!, $textContent: String!) {
