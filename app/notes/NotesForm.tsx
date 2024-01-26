@@ -12,7 +12,7 @@ const createNoteMutation = gql`
   }
 `;
 
-export default function CreateNotesForm() {
+export default function NotesForm() {
   const [title, setTitle] = useState('');
   const [textContent, setTextContent] = useState('');
   const [onError, setOnError] = useState('');
