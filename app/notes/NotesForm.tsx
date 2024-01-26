@@ -1,7 +1,9 @@
 'use client';
+
 import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import styles from './notes.module.scss';
 
 const createNoteMutation = gql`
   mutation CreateNote($title: String!, $textContent: String!) {
@@ -38,32 +40,35 @@ export default function NotesForm() {
   });
 
   return (
-    <>
-      <form
-        onSubmit={async (event) => {
-          event.preventDefault();
-          await createNote();
-        }}
-      >
-        <label>
-          Title:
-          <input
-            value={title}
-            onChange={(event) => setTitle(event.currentTarget.value)}
-          />
-        </label>
+    <div className={styles.noteForm}>
+      <div>
+        <h2>Create Note</h2>
+        <form
+          onSubmit={async (event) => {
+            event.preventDefault();
+            await createNote();
+          }}
+        >
+          <label>
+            Title:
+            <input
+              value={title}
+              onChange={(event) => setTitle(event.currentTarget.value)}
+            />
+          </label>
 
-        <label>
-          Note:
-          <input
-            value={textContent}
-            onChange={(event) => setTextContent(event.currentTarget.value)}
-          />
-        </label>
+          <label>
+            Note:
+            <input
+              value={textContent}
+              onChange={(event) => setTextContent(event.currentTarget.value)}
+            />
+          </label>
 
-        <button>Create +</button>
-      </form>
-      <div className="error">{onError}</div>
-    </>
+          <button>Add Note</button>
+        </form>
+        <div className="error">{onError}</div>
+      </div>
+    </div>
   );
 }
