@@ -17,6 +17,7 @@ const createNoteMutation = gql`
     createNote(title: $title, textContent: $textContent) {
       id
       title
+      textContent
     }
   }
 `;
