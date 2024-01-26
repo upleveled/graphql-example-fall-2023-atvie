@@ -63,7 +63,7 @@ export default function CreateNotesForm() {
 
         <button>Create +</button>
       </form>
-      <p className="error">{onError}</p>
+      <div className="error">{onError}</div>
     </>
   );
 }
