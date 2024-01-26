@@ -66,7 +66,7 @@ export default function AnimalForm() {
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
-  const [onError, setOnError] = useState('');
+  const [error, setError] = useState('');
 
   function resetFormStates() {
     setId(0);
@@ -84,13 +84,13 @@ export default function AnimalForm() {
       accessory,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setError(apolloError.message);
     },
 
     onCompleted: async () => {
       resetFormStates();
-      setOnError('');
+      setError('');
       await refetch();
     },
   });
@@ -103,24 +103,24 @@ export default function AnimalForm() {
       accessory,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setError(apolloError.message);
     },
 
     onCompleted: async () => {
       resetFormStates();
-      setOnError('');
+      setError('');
       await refetch();
     },
   });
 
   const [deleteAnimal] = useMutation(deleteAnimalMutation, {
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setError(apolloError.message);
     },
 
     onCompleted: async () => {
-      setOnError('');
+      setError('');
       await refetch();
     },
   });
@@ -213,7 +213,7 @@ export default function AnimalForm() {
             </label>
             <button>{id ? 'Save Changes' : 'Add Animal'}</button>
           </form>
-          <div className="error">{onError}</div>
+          <div className="error">{error}</div>
         </div>
       </div>
     </>

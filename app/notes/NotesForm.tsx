@@ -25,7 +25,7 @@ const createNoteMutation = gql`
 export default function NotesForm(props: Props) {
   const [title, setTitle] = useState('');
   const [textContent, setTextContent] = useState('');
-  const [onError, setOnError] = useState('');
+  const [error, setError] = useState('');
 
   const router = useRouter();
 
@@ -35,14 +35,14 @@ export default function NotesForm(props: Props) {
       textContent,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setError(apolloError.message);
     },
 
     onCompleted: () => {
       setTitle('');
       setTextContent('');
-      setOnError('');
+      setError('');
       router.refresh();
     },
   });
@@ -98,7 +98,7 @@ export default function NotesForm(props: Props) {
 
               <button>Add Note</button>
             </form>
-            <div className="error">{onError}</div>
+            <div className="error">{error}</div>
           </div>
         </div>
       </div>
