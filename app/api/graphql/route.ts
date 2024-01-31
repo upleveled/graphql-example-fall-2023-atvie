@@ -218,29 +218,31 @@ const apolloServer = new ApolloServer({
   schema,
 });
 
-const apolloServerWithNextHandler =
-  startServerAndCreateNextHandler<NextRequest>(apolloServer, {
+const apolloServerRouteHandler = startServerAndCreateNextHandler<NextRequest>(
+  apolloServer,
+  {
     context: async (req) => {
       return {
         // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
         insecureSessionTokenCookie: await req.cookies.get('sessionToken'),
       };
     },
-  });
+  },
+);
 
 // This setup is incomplete without type annotation
 // export async function GET(req: NextRequest) {
-//   return await apolloServerWithNextHandler(req);
+//   return await apolloServerRouteHandler(req);
 // }
 
 // export async function POST(req: NextRequest) {
-//   return await apolloServerWithNextHandler(req);
+//   return await apolloServerRouteHandler(req);
 // }
 
 export async function GET(
   req: NextRequest,
 ): Promise<NextResponse<GraphqlResponseBody>> {
-  return (await apolloServerWithNextHandler(
+  return (await apolloServerRouteHandler(
     req,
   )) as NextResponse<GraphqlResponseBody>;
 }
@@ -248,7 +250,7 @@ export async function GET(
 export async function POST(
   req: NextRequest,
 ): Promise<NextResponse<GraphqlResponseBody>> {
-  return (await apolloServerWithNextHandler(
+  return (await apolloServerRouteHandler(
     req,
   )) as NextResponse<GraphqlResponseBody>;
 }
