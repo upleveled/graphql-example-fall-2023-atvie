@@ -8,10 +8,10 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
-  deleteAnimalBySessionToken,
+  deleteAnimal,
   getAnimalInsecure,
   getAnimalsInsecure,
-  updateAnimalBySessionToken,
+  updateAnimal,
 } from '../../../database/animals';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
@@ -99,7 +99,7 @@ const resolvers = {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimalBySessionToken(
+      return await deleteAnimal(
         context.insecureSessionTokenCookie.value,
         Number(args.id),
       );
@@ -123,7 +123,7 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimalBySessionToken(
+      return await updateAnimal(
         context.insecureSessionTokenCookie.value,
         Number(args.id),
         args.firstName,

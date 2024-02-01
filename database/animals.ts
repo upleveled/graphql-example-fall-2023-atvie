@@ -43,7 +43,7 @@ export const createAnimal = cache(
   },
 );
 
-export const updateAnimalBySessionToken = cache(
+export const updateAnimal = cache(
   async (
     // FIXME: Rename insecureSessionToken to sessionToken everywhere
     insecureSessionToken: string,
@@ -77,7 +77,7 @@ export const updateAnimalBySessionToken = cache(
   },
 );
 
-export const deleteAnimalBySessionToken = cache(
+export const deleteAnimal = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
   async (insecureSessionToken: string, animalId: number) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
