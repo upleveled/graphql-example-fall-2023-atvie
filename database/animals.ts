@@ -25,10 +25,24 @@ export const getAnimalInsecure = cache(async (id: number) => {
 });
 
 export const createAnimal = cache(
-  async (firstName: string, type: string, accessory: string) => {
+  async (
+    insecureSessionToken: string,
+    firstName: string,
+    type: string,
+    accessory: string,
+  ) => {
+    // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
+    if (
+      insecureSessionToken !==
+      'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
+    ) {
+      return undefined;
+    }
+
     const [animal] = await sql<Animal[]>`
       INSERT INTO
         animals (first_name, type, accessory)
+        -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       VALUES
         (
           ${firstName},

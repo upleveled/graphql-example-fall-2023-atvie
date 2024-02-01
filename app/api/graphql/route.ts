@@ -78,7 +78,11 @@ const resolvers = {
   },
 
   Mutation: {
-    createAnimal: async (parent: null, args: AnimalInput) => {
+    createAnimal: async (
+      parent: null,
+      args: AnimalInput,
+      context: GraphqlContext,
+    ) => {
       if (
         typeof args.firstName !== 'string' ||
         typeof args.type !== 'string' ||
@@ -88,7 +92,17 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field is missing');
       }
-      return await createAnimal(args.firstName, args.type, args.accessory);
+
+      if (!context.insecureSessionTokenCookie) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
+      return await createAnimal(
+        context.insecureSessionTokenCookie.value,
+        args.firstName,
+        args.type,
+        args.accessory,
+      );
     },
 
     deleteAnimal: async (
