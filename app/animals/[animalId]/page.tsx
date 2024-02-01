@@ -1,13 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { getAnimalById } from '../../../database/animals';
+import { getAnimalInsecure } from '../../../database/animals';
 
 type Props = {
   params: { animalId: string };
 };
 
 export default async function AnimalPage(props: Props) {
-  const animal = await getAnimalById(Number(props.params.animalId));
+  const animal = await getAnimalInsecure(Number(props.params.animalId));
 
   if (!animal) {
     return (

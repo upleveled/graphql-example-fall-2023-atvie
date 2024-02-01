@@ -2,7 +2,7 @@ import { cache } from 'react';
 import { Animal } from '../migrations/00000-createTableAnimals';
 import { sql } from './connect';
 
-export const getAnimals = cache(async () => {
+export const getAnimalsInsecure = cache(async () => {
   const animals = await sql<Animal[]>`
     SELECT
       *
@@ -12,7 +12,7 @@ export const getAnimals = cache(async () => {
   return animals;
 });
 
-export const getAnimalById = cache(async (id: number) => {
+export const getAnimalInsecure = cache(async (id: number) => {
   const [animal] = await sql<Animal[]>`
     SELECT
       *

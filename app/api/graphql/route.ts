@@ -9,8 +9,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
   deleteAnimalBySessionToken,
-  getAnimalById,
-  getAnimals,
+  getAnimalInsecure,
+  getAnimalsInsecure,
   updateAnimalBySessionToken,
 } from '../../../database/animals';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
@@ -69,11 +69,11 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     animals: async () => {
-      return await getAnimals();
+      return await getAnimalsInsecure();
     },
 
     animal: async (parent: null, args: { id: string }) => {
-      return await getAnimalById(Number(args.id));
+      return await getAnimalInsecure(Number(args.id));
     },
   },
 
