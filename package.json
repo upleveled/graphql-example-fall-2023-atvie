@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "migrate": "ley --require tsm",
+    "migrate": "ley --require tsx/cjs",
     "start": "next start"
   },
   "dependencies": {
@@ -16,9 +16,9 @@
     "@apollo/server": "^4.9.4",
     "@as-integrations/next": "^2.0.2",
     "@graphql-tools/schema": "^10.0.0",
+    "@upleveled/ley": "^0.8.3",
     "dotenv": "^16.3.1",
     "graphql": "^16.8.1",
-    "ley": "^0.8.1",
     "next": "13.5.4",
     "postgres": "^3.3.5",
     "react": "latest",
@@ -26,7 +26,7 @@
     "sass": "^1.69.1",
     "server-only": "^0.0.1",
     "sharp": "^0.32.6",
-    "tsm": "^2.3.0",
+    "tsx": "^4.7.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
