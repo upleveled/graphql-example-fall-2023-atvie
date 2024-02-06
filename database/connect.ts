@@ -1,6 +1,6 @@
 import 'server-only';
 import postgres from 'postgres';
-import { setEnvironmentVariables } from '../util/config.mjs';
+import { setEnvironmentVariables } from '../util/config.js';
 
 // This loads all environment variables from a .env file
 // for all code after this line
