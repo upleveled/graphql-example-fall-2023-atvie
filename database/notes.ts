@@ -4,13 +4,7 @@ import { sql } from './connect';
 
 export const createNote = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
-  async (
-    insecureSessionToken: string,
-    // FIXME: Remove userId from createNote arguments and use session token to get userId (see FIXME in query below)
-    userId: number,
-    title: string,
-    textContent: string,
-  ) => {
+  async (insecureSessionToken: string, title: string, textContent: string) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
@@ -25,7 +19,7 @@ export const createNote = cache(
         -- FIXME: Implement proper session token validation with subquery on sessions table to get userId
       VALUES
         (
-          ${userId},
+          1,
           ${title},
           ${textContent}
         )
