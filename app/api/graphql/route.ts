@@ -8,10 +8,10 @@ import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
   createAnimal,
-  deleteAnimalBySessionToken,
-  getAnimalById,
-  getAnimals,
-  updateAnimalBySessionToken,
+  deleteAnimal,
+  getAnimalInsecure,
+  getAnimalsInsecure,
+  updateAnimal,
 } from '../../../database/animals';
 import { createNote } from '../../../database/notes';
 import { getUserBySessionToken } from '../../../database/users';
@@ -79,16 +79,20 @@ const typeDefs = gql`
 const resolvers = {
   Query: {
     animals: async () => {
-      return await getAnimals();
+      return await getAnimalsInsecure();
     },
 
     animal: async (parent: null, args: { id: string }) => {
-      return await getAnimalById(Number(args.id));
+      return await getAnimalInsecure(Number(args.id));
     },
   },
 
   Mutation: {
-    createAnimal: async (parent: null, args: AnimalInput) => {
+    createAnimal: async (
+      parent: null,
+      args: AnimalInput,
+      context: GraphqlContext,
+    ) => {
       if (
         typeof args.firstName !== 'string' ||
         typeof args.type !== 'string' ||
@@ -98,7 +102,17 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field is missing');
       }
-      return await createAnimal(args.firstName, args.type, args.accessory);
+
+      if (!context.insecureSessionTokenCookie) {
+        throw new GraphQLError('Unauthorized operation');
+      }
+
+      return await createAnimal(
+        context.insecureSessionTokenCookie.value,
+        args.firstName,
+        args.type,
+        args.accessory,
+      );
     },
 
     deleteAnimal: async (
@@ -109,7 +123,7 @@ const resolvers = {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
-      return await deleteAnimalBySessionToken(
+      return await deleteAnimal(
         context.insecureSessionTokenCookie.value,
         Number(args.id),
       );
@@ -133,7 +147,7 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimalBySessionToken(
+      return await updateAnimal(
         context.insecureSessionTokenCookie.value,
         Number(args.id),
         args.firstName,

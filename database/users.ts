@@ -2,7 +2,7 @@ import { cache } from 'react';
 import { User } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
-export const getUserBySessionToken = cache(
+export const getUser = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
   async (insecureSessionToken: string) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
