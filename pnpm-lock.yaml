@@ -65,10 +65,10 @@ devDependencies:
     specifier: ^20.11.16
     version: 20.11.16
   '@types/react':
-    specifier: ^18.2.55
+    specifier: latest
     version: 18.2.55
   '@types/react-dom':
-    specifier: ^18.2.18
+    specifier: latest
     version: 18.2.18
   eslint-config-upleveled:
     specifier: ^7.7.1
@@ -92,7 +92,7 @@ devDependencies:
     specifier: ^1.0.7
     version: 1.0.7(postcss@8.4.34)(stylelint@16.2.1)
   typescript:
-    specifier: ^5.3.3
+    specifier: latest
     version: 5.3.3
 
 packages:
