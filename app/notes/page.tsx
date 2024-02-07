@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getNotesBySessionToken } from '../../database/notes';
-import { getUserBySessionToken } from '../../database/users';
+import { getNotes } from '../../database/notes';
+import { getUser } from '../../database/users';
 import NotesForm from './NotesForm';
 
 export default async function NotesPage() {
@@ -11,14 +11,12 @@ export default async function NotesPage() {
   const sessionTokenCookie = cookies().get('sessionToken');
 
   // 2. Query user with the sessionToken
-  const user =
-    sessionTokenCookie &&
-    (await getUserBySessionToken(sessionTokenCookie.value));
+  const user = sessionTokenCookie && (await getUser(sessionTokenCookie.value));
 
   if (!user) redirect('/login?returnTo=/notes');
 
   // 3. Display the notes for the current logged in user
-  const notes = await getNotesBySessionToken(sessionTokenCookie.value);
+  const notes = await getNotes(sessionTokenCookie.value);
 
   return <NotesForm notes={notes} username={user.username} />;
 }

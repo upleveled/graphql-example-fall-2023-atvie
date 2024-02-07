@@ -37,7 +37,7 @@ export const createNote = cache(
   },
 );
 
-export const getNotesBySessionToken = cache(
+export const getNotes = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
   async (insecureSessionToken: string) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
@@ -58,7 +58,7 @@ export const getNotesBySessionToken = cache(
   },
 );
 
-export const getNoteBySessionToken = cache(
+export const getNote = cache(
   // FIXME: Rename insecureSessionToken to sessionToken everywhere
   async (insecureSessionToken: string, noteId: number) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)

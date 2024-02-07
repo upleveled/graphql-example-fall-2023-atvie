@@ -14,7 +14,7 @@ import {
   updateAnimal,
 } from '../../../database/animals';
 import { createNote } from '../../../database/notes';
-import { getUserBySessionToken } from '../../../database/users';
+import { getUser } from '../../../database/users';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphqlResponseBody =
@@ -205,9 +205,7 @@ const resolvers = {
       }
 
       // FIXME: Remove this query function when proper session token validation is completed in the createNote database function
-      const user = await getUserBySessionToken(
-        context.insecureSessionTokenCookie.value,
-      );
+      const user = await getUser(context.insecureSessionTokenCookie.value);
       if (!user) {
         throw new GraphQLError('Unauthorized operation');
       }
