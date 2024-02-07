@@ -4,10 +4,10 @@
   "compilerOptions": {
     "plugins": [
       {
-        "name": "next",
-      },
+        "name": "next"
+      }
     ],
-    "jsx": "preserve",
+    "jsx": "preserve"
   },
   "include": [
     "**/*.ts",
@@ -16,7 +16,6 @@
     "**/*.jsx",
     "**/*.cjs",
     "**/*.mjs",
-    "app/**/*",
-    ".next/types/**/*.ts",
-  ],
+    ".next/types/**/*.ts"
+  ]
 }
