@@ -25,12 +25,7 @@ export const getAnimalInsecure = cache(async (id: number) => {
 });
 
 export const createAnimal = cache(
-  async (
-    insecureSessionToken: string,
-    firstName: string,
-    type: string,
-    accessory: string,
-  ) => {
+  async (insecureSessionToken: string, newAnimal: Omit<Animal, 'id'>) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
@@ -45,9 +40,9 @@ export const createAnimal = cache(
         -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       VALUES
         (
-          ${firstName},
-          ${type},
-          ${accessory}
+          ${newAnimal.firstName},
+          ${newAnimal.type},
+          ${newAnimal.accessory}
         )
       RETURNING
         *
@@ -61,10 +56,7 @@ export const updateAnimal = cache(
   async (
     // FIXME: Rename insecureSessionToken to sessionToken everywhere
     insecureSessionToken: string,
-    id: number,
-    firstName: string,
-    type: string,
-    accessory: string,
+    updatedAnimal: Animal,
   ) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
@@ -77,12 +69,12 @@ export const updateAnimal = cache(
     const [animal] = await sql<Animal[]>`
       UPDATE animals
       SET
-        first_name = ${firstName},
-        type = ${type},
-        accessory = ${accessory}
+        first_name = ${updatedAnimal.firstName},
+        type = ${updatedAnimal.type},
+        accessory = ${updatedAnimal.accessory}
         -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
-        id = ${id}
+        id = ${updatedAnimal.id}
       RETURNING
         *
     `;
