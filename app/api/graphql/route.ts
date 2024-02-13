@@ -13,7 +13,14 @@ import {
   getAnimalsInsecure,
   updateAnimal,
 } from '../../../database/animals';
-import { Animal } from '../../../migrations/00000-createTableAnimals';
+import {
+  Animal,
+  CreateAnimalMutationVariables,
+  DeleteAnimalMutationVariables,
+  LoginMutationVariables,
+  QueryAnimalArgs,
+  UpdateAnimalMutationVariables,
+} from '../../graphqlGeneratedTypes';
 
 export type GraphqlResponseBody =
   | {
@@ -24,12 +31,6 @@ export type GraphqlResponseBody =
 type GraphqlContext = {
   // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
   insecureSessionTokenCookie: RequestCookie | undefined;
-};
-
-type AnimalInput = {
-  firstName: string;
-  type: string;
-  accessory: string;
 };
 
 const typeDefs = gql`
@@ -72,7 +73,7 @@ const resolvers = {
       return await getAnimalsInsecure();
     },
 
-    animal: async (parent: null, args: { id: string }) => {
+    animal: async (parent: null, args: QueryAnimalArgs) => {
       return await getAnimalInsecure(Number(args.id));
     },
   },
@@ -80,7 +81,7 @@ const resolvers = {
   Mutation: {
     createAnimal: async (
       parent: null,
-      args: AnimalInput,
+      args: CreateAnimalMutationVariables,
       context: GraphqlContext,
     ) => {
       if (
@@ -97,17 +98,16 @@ const resolvers = {
         throw new GraphQLError('Unauthorized operation');
       }
 
-      return await createAnimal(
-        context.insecureSessionTokenCookie.value,
-        args.firstName,
-        args.type,
-        args.accessory,
-      );
+      return await createAnimal(context.insecureSessionTokenCookie.value, {
+        firstName: args.firstName,
+        type: args.type,
+        accessory: args.accessory || null,
+      });
     },
 
     deleteAnimal: async (
       parent: null,
-      args: { id: string },
+      args: DeleteAnimalMutationVariables,
       context: GraphqlContext,
     ) => {
       if (!context.insecureSessionTokenCookie) {
@@ -121,7 +121,7 @@ const resolvers = {
 
     updateAnimal: async (
       parent: null,
-      args: AnimalInput & { id: string },
+      args: UpdateAnimalMutationVariables,
       context: GraphqlContext,
     ) => {
       if (!context.insecureSessionTokenCookie) {
@@ -137,16 +137,15 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimal(
-        context.insecureSessionTokenCookie.value,
-        Number(args.id),
-        args.firstName,
-        args.type,
-        args.accessory,
-      );
+      return await updateAnimal(context.insecureSessionTokenCookie.value, {
+        id: Number(args.id),
+        firstName: args.firstName,
+        type: args.type,
+        accessory: args.accessory || null,
+      });
     },
 
-    login: (parent: null, args: { username: string; password: string }) => {
+    login: (parent: null, args: LoginMutationVariables) => {
       if (
         typeof args.username !== 'string' ||
         typeof args.password !== 'string' ||
