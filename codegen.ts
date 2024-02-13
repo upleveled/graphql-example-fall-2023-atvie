@@ -8,7 +8,7 @@ const config: CodegenConfig = {
   schema: `${process.env.NEXT_PUBLIC_BASE_URL}/api/graphql`,
   documents: ['app/**/*.tsx'],
   generates: {
-    'app/generatedGraphqlTypes.ts': {
+    'app/graphqlGeneratedTypes.ts': {
       plugins: ['typescript', 'typescript-operations'],
     },
   },
