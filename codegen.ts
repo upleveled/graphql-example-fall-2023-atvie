@@ -11,13 +11,6 @@ const config: CodegenConfig = {
     'app/generatedGraphqlTypes.ts': {
       plugins: ['typescript', 'typescript-operations'],
     },
-    'app/': {
-      preset: 'near-operation-file',
-      presetConfig: {
-        extension: '.generated.ts',
-        baseTypesPath: 'generatedGraphqlTypes.ts',
-      },
-    },
   },
 };
 
