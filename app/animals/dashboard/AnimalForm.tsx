@@ -4,6 +4,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
+import ErrorMessage from '../../ErrorMessage';
 import styles from './AnimalsForm.module.scss';
 
 const createAnimalMutation = gql`
@@ -213,7 +214,7 @@ export default function AnimalForm() {
             </label>
             <button>{id ? 'Save Changes' : 'Add Animal'}</button>
           </form>
-          <div className="error">{error}</div>
+          <ErrorMessage>{error}</ErrorMessage>
         </div>
       </div>
     </>

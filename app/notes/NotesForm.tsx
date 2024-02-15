@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Note } from '../../migrations/00004-createTableNotes';
+import ErrorMessage from '../ErrorMessage';
 import styles from './notesForm.module.scss';
 
 type Props = {
@@ -98,7 +99,7 @@ export default function NotesForm(props: Props) {
 
               <button>Add Note</button>
             </form>
-            <div className="error">{error}</div>
+            <ErrorMessage>{error}</ErrorMessage>
           </div>
         </div>
       </div>
