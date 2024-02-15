@@ -62,7 +62,7 @@ const deleteAnimalMutation = gql`
   }
 `;
 
-export default function AnimalForm() {
+export default function AnimalsForm() {
   const [id, setId] = useState(0);
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
@@ -179,7 +179,7 @@ export default function AnimalForm() {
             </tbody>
           </table>
         </div>
-        <div className={styles.animalForm}>
+        <div className={styles.animalsForm}>
           <h2>{id ? 'Edit Animal' : 'Add Animal'}</h2>
           <form
             onSubmit={async (event) => {
