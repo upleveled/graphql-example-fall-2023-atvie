@@ -50,22 +50,19 @@ export default function NotesForm(props: Props) {
 
   return (
     <>
-      <h1>Notes</h1>
+      <h1>Notes For {props.username}</h1>
       <div className={styles.notes}>
         <div>
           {props.notes.length === 0 ? (
-            <h2>No notes yet</h2>
+            ' No notes yet'
           ) : (
-            <>
-              <h2>Notes For {props.username}</h2>
-              <ul>
-                {props.notes.map((note) => (
-                  <li key={`note-${note.id}`}>
-                    <Link href={`/notes/${note.id}`}>{note.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </>
+            <ul>
+              {props.notes.map((note) => (
+                <li key={`note-${note.id}`}>
+                  <Link href={`/notes/${note.id}`}>{note.title}</Link>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
 
