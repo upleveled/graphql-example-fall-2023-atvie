@@ -5,10 +5,10 @@ setEnvironmentVariables();
 
 const codegenConfig: CodegenConfig = {
   overwrite: true,
-  schema: `${process.env.NEXT_PUBLIC_BASE_URL}/api/graphql`,
-  documents: ['app/**/*.tsx', 'app/api/graphql/route.ts'],
+  schema: './app/api/graphql/route.ts',
+  documents: ['./app/**/*.tsx', './app/api/graphql/route.ts'],
   generates: {
-    'graphql/graphqlGeneratedTypes.ts': {
+    './graphql/graphqlGeneratedTypes.ts': {
       plugins: ['typescript', 'typescript-resolvers'],
     },
   },
