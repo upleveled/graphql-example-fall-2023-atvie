@@ -6,10 +6,10 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "generate": "graphql-codegen",
     "lint": "next lint",
     "migrate": "ley --require tsx/cjs",
-    "start": "next start",
-    "generate": "graphql-codegen"
+    "start": "next start"
   },
   "dependencies": {
     "@apollo/client": "^3.9.2",
