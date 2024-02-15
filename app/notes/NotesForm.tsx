@@ -4,12 +4,13 @@ import { gql, useMutation } from '@apollo/client';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { PostgresToGraphql } from '../../graphql/transform';
 import { Note } from '../../migrations/00004-createTableNotes';
 import ErrorMessage from '../ErrorMessage';
 import styles from './NotesForm.module.scss';
 
 type Props = {
-  notes: Note[];
+  notes: PostgresToGraphql<Note>[];
   username: string;
 };
 
