@@ -1,6 +1,6 @@
-import { setEnvironmentVariables } from './util/config.js';
+import { config } from 'dotenv-safe';
 
-setEnvironmentVariables();
+config();
 
 const options = {};
 export default options;
