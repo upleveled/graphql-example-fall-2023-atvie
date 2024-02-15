@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getSafeReturnToPath } from '../../../util/validation';
+import ErrorMessage from '../../ErrorMessage';
 
 const loginMutation = gql`
   mutation Login($username: String!, $password: String!) {
@@ -69,7 +70,7 @@ export default function LoginForm(props: Props) {
         </label>
         <button>Login</button>
       </form>
-      <div className="error">{error}</div>
+      <ErrorMessage>{error}</ErrorMessage>
     </>
   );
 }
