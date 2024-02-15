@@ -9,15 +9,13 @@
   box-sizing: border-box;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-}
-
 body {
   background: var(--color-background);
   // Avoid fixed footer obscuring content
   padding-bottom: 50px;
+  margin: 0;
+  font-family: -apple-system, 'system-ui', 'Segoe UI', 'Noto Sans', Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
 }
 
 a {
@@ -72,4 +70,8 @@ input {
   border: 1px solid;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+main {
+  padding: 1rem;
 }
