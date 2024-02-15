@@ -36,3 +36,6 @@ yarn-error.log*
 next-env.d.ts
 
 .eslintcache
+
+# Generated types from GraphQL Code Generator
+graphql/graphqlGeneratedTypes.ts
