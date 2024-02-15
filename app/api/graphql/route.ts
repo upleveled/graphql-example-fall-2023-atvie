@@ -3,6 +3,7 @@ import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { GraphQLError } from 'graphql';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 import {
@@ -20,6 +21,11 @@ export type GraphqlResponseBody =
       animal: Animal;
     }
   | Error;
+
+type GraphqlContext = {
+  // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
+  insecureSessionTokenCookie: RequestCookie | undefined;
+};
 
 const typeDefs = gql`
   type Animal {
@@ -63,7 +69,7 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers: Resolvers = {
+const resolvers: Resolvers<GraphqlContext> = {
   Query: {
     animals: async () => {
       return await getAnimalsInsecure();
