@@ -8,7 +8,7 @@ import { Note } from '../../migrations/00004-createTableNotes';
 import styles from './notesForm.module.scss';
 
 type Props = {
-  notes: Note[] | undefined;
+  notes: Note[];
   username: string;
 };
 
@@ -52,13 +52,13 @@ export default function NotesForm(props: Props) {
       <h1>Notes</h1>
       <div className={styles.notePage}>
         <div>
-          {props.notes?.length === 0 ? (
+          {props.notes.length === 0 ? (
             <h2>No notes yet</h2>
           ) : (
             <>
               <h2>Notes For {props.username}</h2>
               <ul>
-                {props.notes?.map((note) => (
+                {props.notes.map((note) => (
                   <li key={`note-${note.id}`}>
                     <Link href={`/notes/${note.id}`}>{note.title}</Link>
                   </li>
