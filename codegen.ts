@@ -1,9 +1,9 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
-import { setEnvironmentVariables } from './util/config';
+import { config } from 'dotenv-safe';
 
-setEnvironmentVariables();
+config();
 
-const config: CodegenConfig = {
+const codegenConfig: CodegenConfig = {
   overwrite: true,
   schema: `${process.env.NEXT_PUBLIC_BASE_URL}/api/graphql`,
   documents: ['app/**/*.tsx'],
@@ -14,4 +14,4 @@ const config: CodegenConfig = {
   },
 };
 
-export default config;
+export default codegenConfig;
