@@ -1,7 +1,6 @@
 .dashboard {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  padding: 1.5rem;
   grid-gap: 1rem;
 
   @media (max-width: 990px) {
@@ -35,8 +34,6 @@
 }
 
 .animalForm {
-  padding: 1rem;
-
   @media (max-width: 990px) {
     // Display form above table on smaller screens
     order: -1;
