@@ -50,7 +50,7 @@ export default function NotesForm(props: Props) {
 
   return (
     <>
-      <h1>Notes For {props.username}</h1>
+      <h1>Notes for {props.username}</h1>
       <div className={styles.notes}>
         <div>
           {props.notes.length === 0 ? (
