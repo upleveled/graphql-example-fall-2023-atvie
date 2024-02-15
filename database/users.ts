@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { postgresToGraphql } from '../graphql/transform';
 import { User } from '../migrations/00002-createTableUsers';
 import { sql } from './connect';
 
@@ -10,7 +11,7 @@ export const getUser = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [user] = await sql<User[]>`
@@ -23,6 +24,6 @@ export const getUser = cache(
         username = 'victor'
     `;
     console.log(insecureSessionToken);
-    return user;
+    return postgresToGraphql(user);
   },
 );

@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { postgresToGraphql } from '../graphql/transform';
 import { Animal } from '../migrations/00000-createTableAnimals';
 import { sql } from './connect';
 
@@ -9,7 +10,7 @@ export const getAnimalsInsecure = cache(async () => {
     FROM
       animals
   `;
-  return animals;
+  return animals.map(postgresToGraphql);
 });
 
 export const getAnimalInsecure = cache(async (id: number) => {
@@ -21,7 +22,7 @@ export const getAnimalInsecure = cache(async (id: number) => {
     WHERE
       id = ${id}
   `;
-  return animal;
+  return postgresToGraphql(animal);
 });
 
 export const createAnimal = cache(
@@ -31,7 +32,7 @@ export const createAnimal = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
@@ -48,7 +49,7 @@ export const createAnimal = cache(
         animals.*
     `;
 
-    return animal;
+    return postgresToGraphql(animal);
   },
 );
 
@@ -63,7 +64,7 @@ export const updateAnimal = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
@@ -79,7 +80,7 @@ export const updateAnimal = cache(
         animals.*
     `;
 
-    return animal;
+    return postgresToGraphql(animal);
   },
 );
 
@@ -91,7 +92,7 @@ export const deleteAnimal = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
@@ -102,6 +103,6 @@ export const deleteAnimal = cache(
       RETURNING
         animals.*
     `;
-    return animal;
+    return postgresToGraphql(animal);
   },
 );

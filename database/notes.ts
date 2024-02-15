@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { postgresToGraphql } from '../graphql/transform';
 import { Note } from '../migrations/00004-createTableNotes';
 import { sql } from './connect';
 
@@ -10,7 +11,7 @@ export const createNote = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [note] = await sql<Note[]>`
@@ -27,7 +28,7 @@ export const createNote = cache(
         notes.*
     `;
 
-    return note;
+    return postgresToGraphql(note);
   },
 );
 
@@ -48,7 +49,7 @@ export const getNotes = cache(
         notes
         -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
     `;
-    return notes;
+    return notes.map(postgresToGraphql);
   },
 );
 
@@ -60,7 +61,7 @@ export const getNote = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [note] = await sql<Note[]>`
@@ -72,6 +73,6 @@ export const getNote = cache(
       WHERE
         notes.id = ${noteId}
     `;
-    return note;
+    return postgresToGraphql(note);
   },
 );
