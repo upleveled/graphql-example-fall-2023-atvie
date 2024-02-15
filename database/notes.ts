@@ -24,7 +24,7 @@ export const createNote = cache(
           ${textContent}
         )
       RETURNING
-        *
+        notes.*
     `;
 
     return note;
@@ -39,7 +39,7 @@ export const getNotes = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return [];
     }
     const notes = await sql<Note[]>`
       SELECT
