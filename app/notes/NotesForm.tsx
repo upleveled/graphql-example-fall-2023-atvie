@@ -96,6 +96,7 @@ export default function NotesForm(props: Props) {
 
               <button>Add Note</button>
             </form>
+
             <ErrorMessage>{errorMessage}</ErrorMessage>
           </div>
         </div>
