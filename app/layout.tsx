@@ -40,7 +40,9 @@ export default async function RootLayout({
           <div>{user?.username}</div>
           {user?.username ? <LogoutButton /> : <Link href="/login">Login</Link>}
         </nav>
-        <ApolloClientProvider>{children}</ApolloClientProvider>
+        <ApolloClientProvider>
+          <main>{children}</main>
+        </ApolloClientProvider>
       </body>
     </html>
   );

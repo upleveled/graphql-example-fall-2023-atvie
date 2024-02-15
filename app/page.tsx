@@ -3,7 +3,7 @@ import smilingCat from '../public/images/smiling-cat.jpeg';
 
 export default function HomePage() {
   return (
-    <main>
+    <div>
       <h1>Hello UpLeveled!</h1>
       {/* This is not ideal because its not optimized */}
       <img src="/images/smiling-cat.jpeg" alt="Smiling cat" />
@@ -16,6 +16,6 @@ export default function HomePage() {
         height={300}
       />
       <Image src={smilingCat} alt="Smiling cat" />
-    </main>
+    </div>
   );
 }
