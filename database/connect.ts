@@ -1,10 +1,10 @@
 import 'server-only';
-import { config } from 'dotenv-safe';
 import postgres from 'postgres';
+import { setEnvironmentVariables } from '../util/config';
 
 // This loads all environment variables from a .env file
 // for all code after this line
-config();
+setEnvironmentVariables();
 
 // Type needed for the connection function below
 declare module globalThis {

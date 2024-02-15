@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli';
-import { config } from 'dotenv-safe';
+import { setEnvironmentVariables } from './util/config';
 
-config();
+setEnvironmentVariables();
 
 const codegenConfig: CodegenConfig = {
   overwrite: true,
