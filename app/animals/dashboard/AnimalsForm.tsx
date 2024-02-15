@@ -4,6 +4,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useSuspenseQuery } from '@apollo/experimental-nextjs-app-support/ssr';
 import { useState } from 'react';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
+import ErrorMessage from '../../ErrorMessage';
 import styles from './AnimalsForm.module.scss';
 
 const createAnimalMutation = gql`
@@ -61,12 +62,12 @@ const deleteAnimalMutation = gql`
   }
 `;
 
-export default function AnimalForm() {
+export default function AnimalsForm() {
   const [id, setId] = useState(0);
   const [firstName, setFirstName] = useState('');
   const [type, setType] = useState('');
   const [accessory, setAccessory] = useState('');
-  const [onError, setOnError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   function resetFormStates() {
     setId(0);
@@ -84,13 +85,13 @@ export default function AnimalForm() {
       accessory,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setErrorMessage(apolloError.message);
     },
 
     onCompleted: async () => {
       resetFormStates();
-      setOnError('');
+      setErrorMessage('');
       await refetch();
     },
   });
@@ -103,31 +104,32 @@ export default function AnimalForm() {
       accessory,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setErrorMessage(apolloError.message);
     },
 
     onCompleted: async () => {
       resetFormStates();
-      setOnError('');
+      setErrorMessage('');
       await refetch();
     },
   });
 
   const [deleteAnimal] = useMutation(deleteAnimalMutation, {
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setErrorMessage(apolloError.message);
     },
 
     onCompleted: async () => {
-      setOnError('');
+      setErrorMessage('');
       await refetch();
     },
   });
 
   return (
     <>
-      <h1 className={styles.title}>Animal Dashboard</h1>
+      <h1>Animal Dashboard</h1>
+
       <div className={styles.dashboard}>
         <div>
           <table>
@@ -177,7 +179,7 @@ export default function AnimalForm() {
             </tbody>
           </table>
         </div>
-        <div className={styles.animalForm}>
+        <div className={styles.animalsForm}>
           <h2>{id ? 'Edit Animal' : 'Add Animal'}</h2>
           <form
             onSubmit={async (event) => {
@@ -212,7 +214,7 @@ export default function AnimalForm() {
             </label>
             <button>{id ? 'Save Changes' : 'Add Animal'}</button>
           </form>
-          <div className="error">{onError}</div>
+          <ErrorMessage>{errorMessage}</ErrorMessage>
         </div>
       </div>
     </>

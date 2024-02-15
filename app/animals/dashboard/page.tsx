@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { getUser } from '../../../database/users';
-import AnimalForm from './AnimalForm';
+import AnimalsForm from './AnimalsForm';
 
 export default async function DashboardPage() {
   // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
@@ -15,5 +15,5 @@ export default async function DashboardPage() {
     redirect('/login?returnTo=/animals/dashboard');
   }
 
-  return <AnimalForm />;
+  return <AnimalsForm />;
 }
