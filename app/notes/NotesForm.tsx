@@ -54,7 +54,7 @@ export default function NotesForm(props: Props) {
       <div className={styles.notes}>
         <div>
           {props.notes.length === 0 ? (
-            ' No notes yet'
+            'No notes yet'
           ) : (
             <ul>
               {props.notes.map((note) => (
