@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Note } from '../../migrations/00004-createTableNotes';
 import ErrorMessage from '../ErrorMessage';
-import styles from './notesForm.module.scss';
+import styles from './NotesForm.module.scss';
 
 type Props = {
   notes: Note[];
@@ -26,7 +26,7 @@ const createNoteMutation = gql`
 export default function NotesForm(props: Props) {
   const [title, setTitle] = useState('');
   const [textContent, setTextContent] = useState('');
-  const [error, setError] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const router = useRouter();
 
@@ -37,13 +37,13 @@ export default function NotesForm(props: Props) {
     },
 
     onError: (apolloError) => {
-      setError(apolloError.message);
+      setErrorMessage(apolloError.message);
     },
 
     onCompleted: () => {
       setTitle('');
       setTextContent('');
-      setError('');
+      setErrorMessage('');
       router.refresh();
     },
   });
@@ -51,7 +51,7 @@ export default function NotesForm(props: Props) {
   return (
     <>
       <h1>Notes</h1>
-      <div className={styles.notePage}>
+      <div className={styles.notes}>
         <div>
           {props.notes.length === 0 ? (
             <h2>No notes yet</h2>
@@ -69,7 +69,7 @@ export default function NotesForm(props: Props) {
           )}
         </div>
 
-        <div className={styles.noteForm}>
+        <div className={styles.notesForm}>
           <div>
             <h2>Create Note</h2>
 
@@ -99,7 +99,7 @@ export default function NotesForm(props: Props) {
 
               <button>Add Note</button>
             </form>
-            <ErrorMessage>{error}</ErrorMessage>
+            <ErrorMessage>{errorMessage}</ErrorMessage>
           </div>
         </div>
       </div>
