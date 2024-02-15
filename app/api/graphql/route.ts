@@ -13,6 +13,7 @@ import {
   getAnimalsInsecure,
   updateAnimal,
 } from '../../../database/animals';
+import { createNote } from '../../../database/notes';
 import { Animal } from '../../../migrations/00000-createTableAnimals';
 
 export type GraphqlResponseBody =
@@ -45,6 +46,12 @@ const typeDefs = gql`
     username: String
   }
 
+  type Note {
+    id: ID!
+    title: String!
+    textContent: String!
+  }
+
   type Query {
     animals: [Animal]
     animal(id: ID!): Animal
@@ -63,6 +70,8 @@ const typeDefs = gql`
     ): Animal
 
     login(username: String!, password: String!): User
+
+    createNote(title: String!, textContent: String!): Note
   }
 `;
 
@@ -175,6 +184,31 @@ const resolvers = {
         },
       );
     },
+
+    createNote: async (
+      parent: null,
+      args: { title: string; textContent: string },
+      context: GraphqlContext,
+    ) => {
+      if (
+        typeof args.title !== 'string' ||
+        typeof args.textContent !== 'string' ||
+        !args.title ||
+        !args.textContent
+      ) {
+        throw new GraphQLError('Required field missing');
+      }
+
+      if (!context.insecureSessionTokenCookie) {
+        throw new GraphQLError('You must be logged in to create a note');
+      }
+
+      return await createNote(
+        context.insecureSessionTokenCookie.value,
+        args.title,
+        args.textContent,
+      );
+    },
   },
 };
 
@@ -187,32 +221,39 @@ const apolloServer = new ApolloServer({
   schema,
 });
 
-const handler = startServerAndCreateNextHandler<NextRequest>(apolloServer, {
-  context: async (req) => {
-    return {
-      // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
-      insecureSessionTokenCookie: await req.cookies.get('sessionToken'),
-    };
+const apolloServerRouteHandler = startServerAndCreateNextHandler<NextRequest>(
+  apolloServer,
+  {
+    context: async (req) => {
+      return {
+        // FIXME: Create secure session token and rename insecureSessionTokenCookie to sessionToken everywhere
+        insecureSessionTokenCookie: await req.cookies.get('sessionToken'),
+      };
+    },
   },
-});
+);
 
 // This setup is incomplete without type annotation
 // export async function GET(req: NextRequest) {
-//   return await handler(req);
+//   return await apolloServerRouteHandler(req);
 // }
 
 // export async function POST(req: NextRequest) {
-//   return await handler(req);
+//   return await apolloServerRouteHandler(req);
 // }
 
 export async function GET(
   req: NextRequest,
 ): Promise<NextResponse<GraphqlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
+  return (await apolloServerRouteHandler(
+    req,
+  )) as NextResponse<GraphqlResponseBody>;
 }
 
 export async function POST(
   req: NextRequest,
 ): Promise<NextResponse<GraphqlResponseBody>> {
-  return (await handler(req)) as NextResponse<GraphqlResponseBody>;
+  return (await apolloServerRouteHandler(
+    req,
+  )) as NextResponse<GraphqlResponseBody>;
 }

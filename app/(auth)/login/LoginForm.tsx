@@ -3,6 +3,7 @@ import { gql, useMutation } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { getSafeReturnToPath } from '../../../util/validation';
+import ErrorMessage from '../../ErrorMessage';
 
 const loginMutation = gql`
   mutation Login($username: String!, $password: String!) {
@@ -20,7 +21,7 @@ type Props = {
 export default function LoginForm(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [onError, setOnError] = useState('');
+  const [error, setError] = useState('');
   const router = useRouter();
 
   const [login] = useMutation(loginMutation, {
@@ -29,8 +30,8 @@ export default function LoginForm(props: Props) {
       password,
     },
 
-    onError: (error) => {
-      setOnError(error.message);
+    onError: (apolloError) => {
+      setError(apolloError.message);
     },
 
     onCompleted: () => {
@@ -69,7 +70,7 @@ export default function LoginForm(props: Props) {
         </label>
         <button>Login</button>
       </form>
-      <div className="error">{onError}</div>
+      <ErrorMessage>{error}</ErrorMessage>
     </>
   );
 }

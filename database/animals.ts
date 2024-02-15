@@ -50,7 +50,7 @@ export const createAnimal = cache(
           ${accessory}
         )
       RETURNING
-        *
+        animals.*
     `;
 
     return animal;
@@ -84,7 +84,7 @@ export const updateAnimal = cache(
       WHERE
         id = ${id}
       RETURNING
-        *
+        animals.*
     `;
 
     return animal;
@@ -108,7 +108,7 @@ export const deleteAnimal = cache(
       WHERE
         id = ${animalId}
       RETURNING
-        *
+        animals.*
     `;
     return animal;
   },
