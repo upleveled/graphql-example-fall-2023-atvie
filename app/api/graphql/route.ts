@@ -14,7 +14,7 @@ import {
   updateAnimal,
 } from '../../../database/animals';
 import { createNote } from '../../../database/notes';
-import { Animal } from '../../../migrations/00000-createTableAnimals';
+import { Animal, Resolvers } from '../../../graphql/graphqlGeneratedTypes';
 
 export type GraphqlResponseBody =
   | {
@@ -25,12 +25,6 @@ export type GraphqlResponseBody =
 type GraphqlContext = {
   // FIXME: Rename insecureSessionTokenCookie type to sessionToken everywhere
   insecureSessionTokenCookie: RequestCookie | undefined;
-};
-
-type AnimalInput = {
-  firstName: string;
-  type: string;
-  accessory: string;
 };
 
 const typeDefs = gql`
@@ -75,23 +69,19 @@ const typeDefs = gql`
   }
 `;
 
-const resolvers = {
+const resolvers: Resolvers<GraphqlContext> = {
   Query: {
     animals: async () => {
       return await getAnimalsInsecure();
     },
 
-    animal: async (parent: null, args: { id: string }) => {
+    animal: async (parent, args) => {
       return await getAnimalInsecure(Number(args.id));
     },
   },
 
   Mutation: {
-    createAnimal: async (
-      parent: null,
-      args: AnimalInput,
-      context: GraphqlContext,
-    ) => {
+    createAnimal: async (parent, args, context) => {
       if (
         typeof args.firstName !== 'string' ||
         typeof args.type !== 'string' ||
@@ -106,19 +96,23 @@ const resolvers = {
         throw new GraphQLError('Unauthorized operation');
       }
 
-      return await createAnimal(
+      const animal = await createAnimal(
         context.insecureSessionTokenCookie.value,
-        args.firstName,
-        args.type,
-        args.accessory,
+        {
+          firstName: args.firstName,
+          type: args.type,
+          accessory: args.accessory || null,
+        },
       );
+
+      if (!animal) {
+        throw new GraphQLError('Failed to create animal');
+      }
+
+      return animal;
     },
 
-    deleteAnimal: async (
-      parent: null,
-      args: { id: string },
-      context: GraphqlContext,
-    ) => {
+    deleteAnimal: async (parent, args, context) => {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -128,11 +122,7 @@ const resolvers = {
       );
     },
 
-    updateAnimal: async (
-      parent: null,
-      args: AnimalInput & { id: string },
-      context: GraphqlContext,
-    ) => {
+    updateAnimal: async (parent, args, context) => {
       if (!context.insecureSessionTokenCookie) {
         throw new GraphQLError('Unauthorized operation');
       }
@@ -146,16 +136,15 @@ const resolvers = {
       ) {
         throw new GraphQLError('Required field missing');
       }
-      return await updateAnimal(
-        context.insecureSessionTokenCookie.value,
-        Number(args.id),
-        args.firstName,
-        args.type,
-        args.accessory,
-      );
+      return await updateAnimal(context.insecureSessionTokenCookie.value, {
+        id: Number(args.id),
+        firstName: args.firstName,
+        type: args.type,
+        accessory: args.accessory || null,
+      });
     },
 
-    login: (parent: null, args: { username: string; password: string }) => {
+    login: (parent, args) => {
       if (
         typeof args.username !== 'string' ||
         typeof args.password !== 'string' ||
@@ -183,13 +172,11 @@ const resolvers = {
           maxAge: 60 * 60 * 24 * 30, // 30 days
         },
       );
+
+      return null;
     },
 
-    createNote: async (
-      parent: null,
-      args: { title: string; textContent: string },
-      context: GraphqlContext,
-    ) => {
+    createNote: async (parent, args, context) => {
       if (
         typeof args.title !== 'string' ||
         typeof args.textContent !== 'string' ||

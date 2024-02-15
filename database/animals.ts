@@ -1,4 +1,5 @@
 import { cache } from 'react';
+import { postgresToGraphql } from '../graphql/transform';
 import { Animal } from '../migrations/00000-createTableAnimals';
 import { sql } from './connect';
 
@@ -9,7 +10,7 @@ export const getAnimalsInsecure = cache(async () => {
     FROM
       animals
   `;
-  return animals;
+  return animals.map(postgresToGraphql);
 });
 
 export const getAnimalInsecure = cache(async (id: number) => {
@@ -21,22 +22,17 @@ export const getAnimalInsecure = cache(async (id: number) => {
     WHERE
       id = ${id}
   `;
-  return animal;
+  return postgresToGraphql(animal);
 });
 
 export const createAnimal = cache(
-  async (
-    insecureSessionToken: string,
-    firstName: string,
-    type: string,
-    accessory: string,
-  ) => {
+  async (insecureSessionToken: string, newAnimal: Omit<Animal, 'id'>) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
@@ -45,15 +41,15 @@ export const createAnimal = cache(
         -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       VALUES
         (
-          ${firstName},
-          ${type},
-          ${accessory}
+          ${newAnimal.firstName},
+          ${newAnimal.type},
+          ${newAnimal.accessory}
         )
       RETURNING
         animals.*
     `;
 
-    return animal;
+    return postgresToGraphql(animal);
   },
 );
 
@@ -61,33 +57,30 @@ export const updateAnimal = cache(
   async (
     // FIXME: Rename insecureSessionToken to sessionToken everywhere
     insecureSessionToken: string,
-    id: number,
-    firstName: string,
-    type: string,
-    accessory: string,
+    updatedAnimal: Animal,
   ) => {
     // FIXME: Remove this early return when proper session token validation is implemented (see FIXME in query below)
     if (
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
       UPDATE animals
       SET
-        first_name = ${firstName},
-        type = ${type},
-        accessory = ${accessory}
+        first_name = ${updatedAnimal.firstName},
+        type = ${updatedAnimal.type},
+        accessory = ${updatedAnimal.accessory}
         -- FIXME: Implement proper session token validation with INNER JOIN on sessions table
       WHERE
-        id = ${id}
+        id = ${updatedAnimal.id}
       RETURNING
         animals.*
     `;
 
-    return animal;
+    return postgresToGraphql(animal);
   },
 );
 
@@ -99,7 +92,7 @@ export const deleteAnimal = cache(
       insecureSessionToken !==
       'ae96c51f--fixme--insecure-hardcoded-session-token--5a3e491b4f'
     ) {
-      return undefined;
+      return null;
     }
 
     const [animal] = await sql<Animal[]>`
@@ -110,6 +103,6 @@ export const deleteAnimal = cache(
       RETURNING
         animals.*
     `;
-    return animal;
+    return postgresToGraphql(animal);
   },
 );
